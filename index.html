@@ -285,18 +285,17 @@
             text-shadow: 0 0 12px rgba(245, 215, 66, 0.25);
         }
 
-        @keyframes fadeIn {
+        @keyframes textAppear {
             from {
                 opacity: 0;
-                transform: translateY(15px);
+                filter: brightness(0.7);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                filter: brightness(1);
             }
         }
-
         /* ===== رزرو ===== */
 
         .register-section {
@@ -737,4 +736,4 @@
 <div id="toast" class="toast"></div>
 
 </body>
-                </html>
+</html>
