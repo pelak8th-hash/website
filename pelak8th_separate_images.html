@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پلاک هشتم | کافه کتاب گیم</title>
+    <!-- فونت‌های لاکچری -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <!-- کتابخانه تاریخ شمسی (از unpkg) -->
+    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
+    <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #1a1410, #0a0806 90%);
+            color: #f0ece3;
+            font-family: 'Cormorant Garamond', serif;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .glass {
+            background: rgba(20, 18, 16, 0.45);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 55, 0.05);
+            border-radius: 40px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 20px 10px 50px;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1a1410; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f5d742, #b8962e); border-radius: 10px; }
+
+        /* ===== هدر ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0 10px;
+            position: relative;
+        }
+
+        .logo-wrap {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            max-width: 180px;
+            height: auto;
+            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4)) brightness(1.05);
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), filter 0.4s;
+        }
+        .logo:hover {
+            transform: scale(1.04) rotate(-1deg);
+            filter: drop-shadow(0 0 55px rgba(245, 215, 66, 0.6));
+        }
+
+        /* بقیه استایل‌ها */
+        .gold-divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #f5d742, #e6b800, #f5d742, transparent);
+            margin: 10px 0 50px;
+            border: none;
+            box-shadow: 0 0 35px rgba(245, 215, 66, 0.25);
+        }
+
+        .intro-section {
+            padding: 50px 25px;
+            margin: 20px 0 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: rgba(20, 18, 16, 0.3);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 50px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 80px rgba(212, 175, 55, 0.03);
+        }
+        .intro-text {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: 1.8rem;
+            line-height: 2.8rem;
+            color: #f5e7c8;
+            text-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+            animation: fadeGlow 1.2s ease-out;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .intro-text .highlight {
+            color: #f5d742;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(245, 215, 66, 0.3);
+        }
+        @keyframes fadeGlow {
+            0% { opacity: 0; transform: translateY(25px) scale(0.98); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .empty-section {
+            height: 15vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #6a5f4b;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+            margin-top: 50px;
+            padding-top: 30px;
+        }
+
+        .glow-line {
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #f5d742, transparent);
+            margin: 15px auto 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px #f5d742;
+        }
+
+        /* ===== راه‌های ارتباطی ===== */
+        .contact-section {
+            padding: 25px 0 10px;
+            margin-top: 35px;
+            text-align: center;
+        }
+        .contact-title {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: 1.9rem;
+            color: #f5d742;
+            margin-bottom: 25px;
+            text-shadow: 0 0 25px rgba(245, 215, 66, 0.15);
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .contact-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 78px;
+            padding: 6px;
+            text-decoration: none;
+            color: #f5e7c8;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            transition: 0.3s ease;
+        }
+        .contact-card:hover {
+            transform: translateY(-2px);
+            box-shadow: none;
+        }
+        .contact-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        .contact-card span {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+        .contact-card b {
+            font-family: 'Cinzel', serif;
+            font-weight: 400;
+            font-size: 1.1rem;
+            color: #f5d742;
+        }
+        .contact-card small {
+            font-size: 1rem;
+            color: #d4c5a0;
+            direction: ltr;
+        }
+
+        /* responsive */
+        @media (max-width: 640px) {
+            .intro-text { font-size: 1.3rem; line-height: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header class="header">
+        <div class="logo-wrap">
+            <img src="Screenshot_2026-08-16-13-52-17-609-edit_ir.eitaa.messenger_6207501549275130881.webp"
+                 alt="لوگوی پلاک هشتم"
+                 class="logo"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div style="display:none; font-family:'Cinzel',serif; font-size:2rem; color:#f5d742; letter-spacing:4px; text-shadow:0 0 40px #f5d742;">پلاک هشتم</div>
+        </div>
+    </header>
+
+    <hr class="gold-divider">
+
+    <section id="about" class="intro-section glass">
+        <div class="intro-text">
+            سلام ! بیاید بیشتر باهم آشنا بشیم . ما چند تا نوجوان هستیم که با هم جمع شدیم تا هم درس بخونیم و هم تفریح کنیم . در طول هفته با هم تو یه فضای دوستانه کتاب های درسی و غیر درسی می‌خونیم و آخر هفته ها هم با هم بازی می‌کنیم و سرگرم میشیم . آهان راستی اینجا یک کافه هم داریم ! <span class="highlight">😉</span> اگه میخوای به جمع ما بپیوندی میتونی همین حالا ثبت نام کنی .
+        </div>
+        <div class="glow-line"></div>
+    </section>
+
+    <hr class="gold-divider">
+
+    <section id="contact" class="contact-section">
+        <h2 class="contact-title">راه‌های ارتباطی</h2>
+        <div class="contact-grid">
+
+            <a class="contact-card" href="https://eitaa.com/pelak8th" target="_blank" rel="noopener noreferrer">
+                <img class="contact-icon" alt="تصویر ایتا" src="eitaa.png">
+                <span><b>ایتا</b><small>@pelak8th</small></span>
+            </a>
+
+            <a class="contact-card" href="https://splus.ir/pelak8th" target="_blank" rel="noopener noreferrer">
+                <img class="contact-icon" alt="تصویر سروش" src="soroush.png">
+                <span><b>سروش</b><small>@pelak8th</small></span>
+            </a>
+
+            <a class="contact-card" href="https://instagram.com/pelak.8th" target="_blank" rel="noopener noreferrer">
+                <img class="contact-icon" alt="تصویر اینستاگرام" src="instagram.png">
+                <span><b>اینستاگرام</b><small>@pelak.8th</small></span>
+            </a>
+
+        </div>
+    </section>
+
+</div>
+
+
+</body>
+</html>
