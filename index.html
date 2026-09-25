@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <<title>2660150</title>
-    <!-- فونت‌های لاکچری -->
+
+    <title>پلاک هشتم | کافه کتاب گیم</title>
+
+    <!-- فونت‌ها -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
-    <!-- کتابخانه تاریخ شمسی (از unpkg) -->
-    <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
-    <script src="https://unpkg.com/persian-date@1.1.0/dist/persian-date.min.js"></script>
-    <script src="https://unpkg.com/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -20,7 +20,12 @@
         }
 
         body {
-            background: radial-gradient(circle at 50% 20%, #211b0d 0%, #0f0d07 45%, #080704 100%);
+            background: radial-gradient(
+                circle at 50% 20%,
+                #211b0d 0%,
+                #0f0d07 45%,
+                #080704 100%
+            );
             color: #f0ece3;
             font-family: 'Cormorant Garamond', serif;
             min-height: 100vh;
@@ -29,14 +34,7 @@
             position: relative;
         }
 
-        .glass {
-            background: rgba(20, 18, 16, 0.45);
-            backdrop-filter: blur(18px) saturate(180%);
-            -webkit-backdrop-filter: blur(18px) saturate(180%);
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 55, 0.05);
-            border-radius: 40px;
-        }
+        /* ===== کانتینر اصلی ===== */
 
         .container {
             max-width: 1100px;
@@ -44,163 +42,78 @@
             padding: 20px 10px 50px;
         }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1a1410; }
-        ::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #f5d742, #b8962e); border-radius: 10px; }
+        /* ===== اسکرول‌بار ===== */
 
-        /* ===== هدر با دکمه منو ===== */
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 0 10px;
-            position: relative;
+        ::-webkit-scrollbar {
+            width: 8px;
         }
 
-        .logo-wrap {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        ::-webkit-scrollbar-track {
+            background: #1a1410;
         }
 
-        .logo {
-            max-width: 180px;
-            height: auto;
-            filter: drop-shadow(0 0 30px rgba(212, 175, 55, 0.4)) brightness(1.05);
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), filter 0.4s;
-        }
-        .logo:hover {
-            transform: scale(1.04) rotate(-1deg);
-            filter: drop-shadow(0 0 55px rgba(245, 215, 66, 0.6));
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(
+                180deg,
+                #f5d742,
+                #b8962e
+            );
+            border-radius: 10px;
         }
 
-        /* دکمه همبرگری */
-        .menu-btn {
-            display: none !important;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            cursor: pointer;
-            padding: 10px 8px;
-            border-radius: 12px;
-            transition: 0.3s;
-            background: rgba(255, 255, 255, 0.02);
-            border: none;
-            outline: none;
-            z-index: 1001;
-        }
-        .menu-btn span {
-            display: block;
-            width: 30px;
-            height: 2.5px;
-            background: #f5d742;
-            border-radius: 4px;
-            transition: 0.35s ease;
-            box-shadow: 0 0 8px rgba(245, 215, 66, 0.3);
-        }
-        .menu-btn:hover span {
-            background: #ffe066;
-            box-shadow: 0 0 15px #f5d742;
-        }
-        .menu-btn.active span:nth-child(1) {
-            transform: rotate(45deg) translate(6px, 6px);
-        }
-        .menu-btn.active span:nth-child(2) {
-            opacity: 0;
-            transform: scaleX(0);
-        }
-        .menu-btn.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(6px, -6px);
+        /* ===== افکت شیشه‌ای ===== */
+
+        .glass {
+            background: rgba(20, 18, 16, 0.45);
+            backdrop-filter: blur(18px) saturate(180%);
+            -webkit-backdrop-filter: blur(18px) saturate(180%);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow:
+                0 15px 45px rgba(0, 0, 0, 0.6),
+                0 0 30px rgba(212, 175, 55, 0.05);
+            border-radius: 40px;
         }
 
-        /* ===== منوی کناری (سایدبار) ===== */
-        .sidebar {
-            display: none !important;
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 300px;
-            height: 100vh;
-            background: rgba(12, 10, 8, 0.92);
-            backdrop-filter: blur(24px) saturate(200%);
-            -webkit-backdrop-filter: blur(24px) saturate(200%);
-            border-left: 1px solid rgba(212, 175, 55, 0.25);
-            box-shadow: -10px 0 60px rgba(0, 0, 0, 0.8);
-            padding: 80px 30px 40px;
-            transition: right 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            overflow-y: auto;
-        }
-        .sidebar.open {
-            right: 0;
-        }
+        /* ===== تصویر اصلی ===== */
 
-        .sidebar a {
-            color: #e6c87a;
-            text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-            padding: 12px 20px;
-            border-radius: 16px;
-            transition: 0.3s;
-            border: 1px solid transparent;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .sidebar a:hover {
-            background: rgba(245, 215, 66, 0.08);
-            border-color: rgba(245, 215, 66, 0.2);
-            color: #fff4d0;
-            text-shadow: 0 0 25px #f5d742;
-            transform: translateX(-6px);
-        }
-
-        .sidebar .close-btn {
-            align-self: flex-start;
-            background: none;
-            border: none;
-            color: #f5d742;
-            font-size: 2.2rem;
-            cursor: pointer;
-            padding: 5px 10px;
-            transition: 0.3s;
-            font-family: 'Cinzel', serif;
-        }
-        .sidebar .close-btn:hover {
-            transform: rotate(90deg);
-            color: #ffe066;
-        }
-
-        /* اورلی برای بستن منو با کلیک بیرون */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .hero-brand-image {
             width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            z-index: 999;
-            display: none;
-        }
-        .overlay.active {
-            display: block;
+            height: auto;
+
+            -webkit-mask-image: radial-gradient(
+                ellipse at center,
+                black 5%,
+                rgba(0, 0, 0, 0.85) 10%,
+                transparent 100%
+            );
+
+            mask-image: radial-gradient(
+                ellipse at center,
+                black 5%,
+                rgba(0, 0, 0, 0.85) 10%,
+                transparent 100%
+            );
         }
 
-        /* بقیه استایل‌ها */
+        /* ===== خط طلایی ===== */
+
         .gold-divider {
             width: 100%;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #f5d742, #e6b800, #f5d742, transparent);
+            background: linear-gradient(
+                90deg,
+                transparent,
+                #f5d742,
+                #e6b800,
+                #f5d742,
+                transparent
+            );
             margin: 10px 0 50px;
             border: none;
             box-shadow: 0 0 35px rgba(245, 215, 66, 0.25);
         }
+
+        /* ===== بخش درباره ما ===== */
 
         .intro-section {
             padding: 50px 25px;
@@ -208,280 +121,60 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+
             background: rgba(20, 18, 16, 0.3);
             backdrop-filter: blur(16px);
+
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 50px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 0 80px rgba(212, 175, 55, 0.03);
+
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 0 80px rgba(212, 175, 55, 0.03);
         }
+
         .intro-text {
             font-family: 'Playfair Display', serif;
             font-weight: 400;
             font-size: 1.8rem;
             line-height: 2.8rem;
             color: #f5e7c8;
+
             text-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
-            animation: fadeGlow 1.2s ease-out;
+
             max-width: 800px;
             margin: 0 auto;
         }
+
         .intro-text .highlight {
             color: #f5d742;
             font-weight: 700;
             text-shadow: 0 0 20px rgba(245, 215, 66, 0.3);
         }
-        @keyframes fadeGlow {
-            0% { opacity: 0; transform: translateY(25px) scale(0.98); filter: blur(4px); }
-            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-        }
 
-        .register-section {
-            padding: 45px 40px;
-            margin: 40px 0;
-            background: rgba(20, 18, 16, 0.3);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 50px;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.7), inset 0 0 60px rgba(212, 175, 55, 0.03);
-            transition: 0.4s;
-        }
-        .register-section:hover {
-            border-color: #f5d742;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 60px rgba(245, 215, 66, 0.07);
-        }
+        /* ===== بخش رزرو ===== */
 
-        .register-title {
-            font-family: 'Cinzel', serif;
-            font-weight: 900;
-            font-size: 2.4rem;
-            letter-spacing: 4px;
-            color: #f5d742;
-            text-align: center;
-            margin-bottom: 35px;
-            text-shadow: 0 0 40px rgba(245, 215, 66, 0.15);
-        }
-
-        /* دو کادر نام و نام خانوادگی کنار هم */
-        .name-row {
-            display: flex;
-            gap: 20px;
-        }
-        .name-row .form-group {
-            flex: 1;
-            margin-bottom: 28px;
-        }
-
-        .form-group {
-            margin-bottom: 28px;
-        }
-        .form-group label {
-            display: block;
-            font-family: 'Cinzel', serif;
-            font-weight: 400;
-            font-size: 1rem;
-            letter-spacing: 1px;
-            color: #d4c5a0;
-            margin-bottom: 8px;
-        }
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 16px 22px;
-            background: rgba(30, 26, 22, 0.7);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 30px;
-            color: #f0ece3;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            transition: 0.3s;
-            outline: none;
-        }
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: #f5d742;
-            box-shadow: 0 0 30px rgba(245, 215, 66, 0.15);
-            background: rgba(30, 26, 22, 0.85);
-        }
-        .form-group input::placeholder {
-            color: #9a8b77;
-            font-weight: 300;
-        }
-        .form-group select option {
-            background: #1a1410;
-            color: #f0ece3;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 40px;
-            margin-top: 5px;
-            flex-wrap: wrap;
-        }
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #d4c5a0;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .radio-group input[type="radio"] {
-            appearance: none;
-            width: 22px;
-            height: 22px;
-            border: 2px solid #777;
-            border-radius: 50%;
-            position: relative;
-            cursor: pointer;
-            transition: 0.2s;
-            background: rgba(30, 26, 22, 0.6);
-            flex-shrink: 0;
-        }
-        .radio-group input[type="radio"]:checked {
-            border-color: #f5d742;
-            background: #f5d742;
-            box-shadow: 0 0 25px rgba(245, 215, 66, 0.4);
-        }
-        .radio-group input[type="radio"]:checked::after {
-            content: '';
-            width: 10px;
-            height: 10px;
-            background: #0a0806;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            right: 50%;
-            transform: translate(50%, -50%);
-        }
-        .radio-group label.disabled-option {
-            opacity: 0.3;
-            cursor: not-allowed;
-            pointer-events: none;
-            filter: grayscale(0.6);
-        }
-        .radio-group label:not(.disabled-option):hover {
-            color: #f5e7c8;
-        }
-
-        .btn-gold {
-            background: linear-gradient(135deg, #f5d742, #d4af37);
-            border: none;
-            padding: 18px 40px;
-            border-radius: 60px;
-            font-family: 'Cinzel', serif;
-            font-weight: 700;
-            font-size: 1.4rem;
-            letter-spacing: 3px;
-            color: #0a0806;
-            cursor: pointer;
-            transition: 0.4s;
-            width: 100%;
-            margin-top: 15px;
-            box-shadow: 0 8px 35px rgba(245, 215, 66, 0.25);
-            text-shadow: 0 1px 0 rgba(255,255,255,0.2);
-        }
-        .btn-gold:hover {
-            transform: scale(1.02) translateY(-2px);
-            box-shadow: 0 12px 50px rgba(245, 215, 66, 0.45);
-            background: linear-gradient(135deg, #ffe066, #e6b800);
-            color: #000;
-        }
-        .btn-gold:active {
-            transform: scale(0.97);
-        }
-
-        .empty-section {
-            height: 15vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #6a5f4b;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            border-top: 1px solid rgba(212, 175, 55, 0.1);
-            margin-top: 50px;
-            padding-top: 30px;
-        }
-
-        .glow-line {
-            width: 120px;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, #f5d742, transparent);
-            margin: 15px auto 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 30px #f5d742;
-        }
-
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(20,18,16,0.9);
-            backdrop-filter: blur(12px);
-            padding: 18px 30px;
-            border-radius: 60px;
-            border: 1px solid #f5d742;
-            color: #f5e7c8;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.2rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
-            display: none;
-            z-index: 999;
-            text-align: center;
-            max-width: 90%;
-        }
-        .toast.show {
-            display: block;
-            animation: fadeInUp 0.5s ease;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-.hero-brand-image {
-    width: 100%;
-    height: auto;
-    -webkit-mask-image: radial-gradient(
-        ellipse at center,
-        black 5%,
-        rgba(0,0,0,0.85) 10%,
-        transparent 100%
-    );
-    mask-image: radial-gradient(
-        ellipse at center,
-        black 5%,
-        rgba(0,0,0,0.85) 10%,
-        transparent 100%
-    );
-}
-        /* رزرو بدون کادر و بدون بولد */
         .register-section {
             padding: 25px 10px;
             margin: 40px 0;
             background: transparent;
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
             border: none;
             border-radius: 0;
             box-shadow: none;
         }
-        .register-section:hover {
-            border-color: transparent;
-            box-shadow: none;
-        }
+
         .register-title {
+            font-family: 'Cinzel', serif;
             font-weight: 400;
             font-size: 2rem;
             letter-spacing: 2px;
+            color: #f5d742;
+            text-align: center;
             margin-bottom: 30px;
+
+            text-shadow: 0 0 40px rgba(245, 215, 66, 0.15);
         }
+
         .coming-soon-text {
             text-align: center;
             font-size: 1.15rem;
@@ -490,43 +183,56 @@
             margin: 0;
         }
 
-        /* راه‌های ارتباطی */
+        /* ===== راه‌های ارتباطی ===== */
+
         .contact-section {
             padding: 25px 0 10px;
             margin-top: 35px;
             text-align: center;
         }
+
         .contact-title {
             font-family: 'Cinzel', serif;
             font-weight: 400;
             font-size: 1.9rem;
             color: #f5d742;
             margin-bottom: 25px;
+
             text-shadow: 0 0 25px rgba(245, 215, 66, 0.15);
         }
+
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(
+                auto-fit,
+                minmax(180px, 1fr)
+            );
             gap: 8px;
         }
+
         .contact-card {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+
             min-height: 78px;
             padding: 6px;
+
             text-decoration: none;
             color: #f5e7c8;
+
             background: transparent;
             border: none;
             border-radius: 0;
+
             transition: 0.3s ease;
         }
+
         .contact-card:hover {
             transform: translateY(-2px);
-            box-shadow: none;
         }
+
         .contact-icon {
             width: 48px;
             height: 48px;
@@ -534,94 +240,177 @@
             object-fit: cover;
             flex-shrink: 0;
         }
+
         .contact-card span {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             gap: 4px;
         }
+
         .contact-card b {
             font-family: 'Cinzel', serif;
             font-weight: 400;
             font-size: 1.1rem;
             color: #f5d742;
         }
+
         .contact-card small {
             font-size: 1rem;
             color: #d4c5a0;
             direction: ltr;
         }
 
-        /* responsive */
+        /* ===== موبایل ===== */
+
         @media (max-width: 640px) {
-            .intro-text { font-size: 1.3rem; line-height: 2rem; }
-            .register-section { padding: 30px 18px; }
-            .register-title { font-size: 1.8rem; }
-            .radio-group { gap: 20px; }
-            .sidebar {
-            display: none !important; width: 260px; right: -280px; }
-            .sidebar a { font-size: 1.2rem; }
-            .name-row { flex-direction: column; gap: 0; }
-            .contact-grid { grid-template-columns: 1fr; }
-            .contact-card { justify-content: flex-start; }
+
+            .intro-text {
+                font-size: 1.3rem;
+                line-height: 2rem;
+            }
+
+            .register-section {
+                padding: 30px 18px;
+            }
+
+            .register-title {
+                font-size: 1.8rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-card {
+                justify-content: flex-start;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<!-- اورلی -->
-<div id="overlay" class="overlay"></div>
+    <div class="container">
 
-<!-- منوی کناری -->
-<div id="sidebar" class="sidebar">
-    <button class="close-btn" id="closeSidebar">✕</button>
-    <a href="#about" onclick="closeMenu()">درباره ما</a>
-    <a href="#register" onclick="closeMenu()">رزرو</a>
-    <a href="#contact" onclick="closeMenu()">راه‌های ارتباطی</a>
-</div>
+        <!-- تصویر اصلی کافه کتاب پلاک هشتم -->
 
-<div class="container">
+        <section class="hero-brand" aria-label="کافه کتاب پلاک هشتم">
+            <img
+                src="icon.png"
+                alt="کافه کتاب پلاک هشتم"
+                class="hero-brand-image"
+            >
+        </section>
 
-    <!-- تصویر اصلی کافه کتاب پلاک هشتم -->
-<section class="hero-brand" aria-label="کافه کتاب پلاک هشتم">
-    <img src="icon.png" alt="کافه کتاب پلاک هشتم" class="hero-brand-image">
-</section>
+        <hr class="gold-divider">
 
-    <hr class="gold-divider">
+        <!-- درباره ما -->
 
-    <section id="about" class="intro-section glass">
-        <div class="intro-text">
-            سلام ! بیاید بیشتر باهم آشنا بشیم . ما چند تا نوجوان هستیم که با هم جمع شدیم تا هم درس بخونیم و هم تفریح کنیم . در طول هفته با هم تو یه فضای دوستانه کتاب های درسی و غیر درسی می‌خونیم و آخر هفته ها هم با هم بازی می‌کنیم و سرگرم میشیم . آهان راستی اینجا یک کافه هم داریم ! <span class="highlight">😉</span> اگه میخوای به جمع ما بپیوندی میتونی همین حالا ثبت نام کنی .
-        </div>
-    </section>
+        <section id="about" class="intro-section glass">
 
-    <hr class="gold-divider">
+            <div class="intro-text">
 
-    <section id="register" class="register-section">
-        <h2 class="register-title">رزرو میز</h2>
-        <div class="coming-soon-text">به زودی</div>
-    </section>
+                سلام ! بیاید بیشتر باهم آشنا بشیم .
+                ما چند تا نوجوان هستیم که با هم جمع شدیم تا هم درس بخونیم
+                و هم تفریح کنیم .
+                در طول هفته با هم تو یه فضای دوستانه کتاب های درسی و غیر درسی
+                می‌خونیم و آخر هفته ها هم با هم بازی می‌کنیم و سرگرم میشیم .
+                آهان راستی اینجا یک کافه هم داریم !
+                <span class="highlight">😉</span>
+                اگه میخوای به جمع ما بپیوندی میتونی همین حالا ثبت نام کنی .
 
-<section id="contact" class="contact-section">
-    <h2 class="contact-title">راه‌های ارتباطی</h2>
-    <div class="contact-grid">
-        <a class="contact-card" href="https://eitaa.com/pelak8th" target="_blank" rel="noopener noreferrer">
-            <img class="contact-icon" alt="تصویر ایتا" src="eitaa.png">
-            <span><b>ایتا</b><small>@pelak8th</small></span>
-        </a>
+            </div>
 
-        <a class="contact-card" href="https://splus.ir/pelak8th" target="_blank" rel="noopener noreferrer">
-            <img class="contact-icon" alt="تصویر سروش" src="soroush.png">
-            <span><b>سروش</b><small>@pelak8th</small></span>
-        </a>
+        </section>
 
-        <a class="contact-card" href="https://www.instagram.com/pelak.8th/" target="_blank" rel="noopener noreferrer">
-            <img class="contact-icon" alt="تصویر اینستاگرام" src="instagram.png">
-            <span><b>اینستاگرام</b><small>@pelak.8th</small></span>
-        </a>
+        <hr class="gold-divider">
+
+        <!-- رزرو میز -->
+
+        <section id="register" class="register-section">
+
+            <h2 class="register-title">
+                رزرو میز
+            </h2>
+
+            <div class="coming-soon-text">
+                به زودی
+            </div>
+
+        </section>
+
+        <!-- راه‌های ارتباطی -->
+
+        <section id="contact" class="contact-section">
+
+            <h2 class="contact-title">
+                راه‌های ارتباطی
+            </h2>
+
+            <div class="contact-grid">
+
+                <a
+                    class="contact-card"
+                    href="https://eitaa.com/pelak8th"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                        class="contact-icon"
+                        alt="تصویر ایتا"
+                        src="eitaa.png"
+                    >
+
+                    <span>
+                        <b>ایتا</b>
+                        <small>@pelak8th</small>
+                    </span>
+                </a>
+
+
+                <a
+                    class="contact-card"
+                    href="https://splus.ir/pelak8th"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                        class="contact-icon"
+                        alt="تصویر سروش"
+                        src="soroush.png"
+                    >
+
+                    <span>
+                        <b>سروش</b>
+                        <small>@pelak8th</small>
+                    </span>
+                </a>
+
+
+                <a
+                    class="contact-card"
+                    href="https://www.instagram.com/pelak.8th/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <img
+                        class="contact-icon"
+                        alt="تصویر اینستاگرام"
+                        src="instagram.png"
+                    >
+
+                    <span>
+                        <b>اینستاگرام</b>
+                        <small>@pelak.8th</small>
+                    </span>
+                </a>
+
+            </div>
+
+        </section>
+
     </div>
-</section>
-<div id="toast" class="toast"></div>
 
 </body>
 </html>
