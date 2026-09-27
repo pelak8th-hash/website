@@ -286,72 +286,74 @@
                 justify-content: flex-start;
             }
         }
-
-        /* ===== چیدمان اینماد کنار راه‌های ارتباطی ===== */
-
-        .contact-section {
-            position: relative;
-        }
-
+        /* ===== چیدمان اینماد در دسکتاپ ===== */
+        
         .enamad-wrapper {
             display: none;
         }
-
-
-        /* لپ‌تاپ و صفحه‌های بزرگ */
+        
         @media (min-width: 641px) {
         
             .contact-section {
                 position: relative;
-                padding-left: 210px;
             }
-
+        
             .enamad-wrapper {
-                display: flex;
-                position: absolute;
-
-                /* سمت چپ پیام‌رسان‌ها */
-                left: 0;
-
-                /* پایین اینماد هم‌سطح پایین پیام‌رسان‌ها */
-                bottom: 0;
-
-                width: 190px;
-                height: 155px;
-
-                align-items: flex-start;
-                justify-content: center;
-            }
-
-            .enamad-wrapper a {
-                display: flex;
+                display: flex !important;
+        
+                position: absolute !important;
+        
+                /* سمت چپ سه پیام‌رسان */
+                left: 0 !important;
+        
+                /* بالاتر می‌آید تا کل ارتفاعش تقریباً
+                   از عنوان تا پایین پیام‌رسان‌ها باشد */
+                top: 0 !important;
+        
+                width: 180px !important;
+                height: 190px !important;
+        
                 align-items: center;
                 justify-content: center;
+        
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        
+            .enamad-wrapper a {
+                display: flex !important;
                 width: 100%;
                 height: 100%;
+                align-items: center;
+                justify-content: center;
             }
         
             .enamad-wrapper img {
                 max-width: 100%;
                 max-height: 100%;
+                width: auto;
+                height: auto;
                 object-fit: contain;
             }
         }
         
         
-        /* گوشی */
+        /* ===== گوشی؛ همان حالت مرتب قبلی ===== */
+        
         @media (max-width: 640px) {
         
-            .contact-section {
-                padding-left: 0;
-            }
-        
             .enamad-wrapper {
-                display: flex;
+                display: flex !important;
+                position: static !important;
+        
                 width: 100%;
+                height: auto;
+        
+                margin-top: 15px;
+                padding: 0;
+        
                 justify-content: flex-start;
                 align-items: center;
-                margin-top: 15px;
             }
         
             .enamad-wrapper a {
