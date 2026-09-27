@@ -286,7 +286,86 @@
                 justify-content: flex-start;
             }
         }
- 
+
+        /* ===== چیدمان اینماد کنار راه‌های ارتباطی ===== */
+
+        .contact-section {
+            position: relative;
+        }
+
+        .enamad-wrapper {
+            display: none;
+        }
+
+
+        /* لپ‌تاپ و صفحه‌های بزرگ */
+        @media (min-width: 641px) {
+        
+            .contact-section {
+                position: relative;
+                padding-left: 210px;
+            }
+
+            .enamad-wrapper {
+                display: flex;
+                position: absolute;
+
+                /* سمت چپ پیام‌رسان‌ها */
+                left: 0;
+
+                /* پایین اینماد هم‌سطح پایین پیام‌رسان‌ها */
+                bottom: 0;
+
+                width: 190px;
+                height: 155px;
+
+                align-items: flex-start;
+                justify-content: center;
+            }
+
+            .enamad-wrapper a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+            }
+        
+            .enamad-wrapper img {
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+            }
+        }
+        
+        
+        /* گوشی */
+        @media (max-width: 640px) {
+        
+            .contact-section {
+                padding-left: 0;
+            }
+        
+            .enamad-wrapper {
+                display: flex;
+                width: 100%;
+                justify-content: flex-start;
+                align-items: center;
+                margin-top: 15px;
+            }
+        
+            .enamad-wrapper a {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+        
+            .enamad-wrapper img {
+                max-width: 100%;
+                height: auto;
+            }
+        }
+         
     </style>
 </head>
 
@@ -409,10 +488,13 @@
 
             </div>
 
+            <div class="enamad-wrapper">
+                <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=7903332&Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=7903332&Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft' alt='' style='cursor:pointer' code='ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft'></a>
+            </div>
+
         </section>
 
-        <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=7903332&Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=7903332&Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft' alt='' style='cursor:pointer' code='ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft'></a>
-
+        
     </div>
 
 </body>
