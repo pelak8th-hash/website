@@ -1735,7 +1735,25 @@ async function getSessions(date){
             error
         );
 
-        return [];
+        const message =
+            error && error.message
+                ? error.message
+                : String(error);
+
+        const bookingMessage =
+            document.getElementById("bookingMessage");
+
+        if(bookingMessage){
+
+            bookingMessage.textContent =
+                "خطای واقعی: " + message;
+
+            bookingMessage.className =
+                "message error";
+
+        }
+
+        return null;
 
     }
 
