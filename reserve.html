@@ -1,0 +1,3432 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    پلاک هشتم | رزرو میز
+</title>
+
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Vazirmatn:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box
+}
+
+
+body{
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            #211b0d 0%,
+            #0f0d07 45%,
+            #080704 100%
+        );
+
+    color:#f0ece3;
+
+    font-family:'Vazirmatn',sans-serif;
+
+    min-height:100vh;
+
+    padding:0 20px
+
+}
+
+
+.container{
+
+    max-width:700px;
+
+    margin:auto;
+
+    padding:30px 10px 60px
+
+}
+
+
+::-webkit-scrollbar{
+    width:8px
+}
+
+
+::-webkit-scrollbar-track{
+    background:#1a1410
+}
+
+
+::-webkit-scrollbar-thumb{
+
+    background:
+        linear-gradient(
+            180deg,
+            #f5d742,
+            #b8962e
+        );
+
+    border-radius:10px
+
+}
+
+
+.glass{
+
+    background:
+        rgba(20,18,16,.45);
+
+    backdrop-filter:
+        blur(18px)
+        saturate(180%);
+
+    -webkit-backdrop-filter:
+        blur(18px)
+        saturate(180%);
+
+    border:
+        1px solid
+        rgba(212,175,55,.25);
+
+    box-shadow:
+        0 15px 45px
+        rgba(0,0,0,.6),
+
+        0 0 30px
+        rgba(212,175,55,.05);
+
+    border-radius:40px
+
+}
+
+
+.title{
+
+    font-family:'Cinzel',serif;
+
+    font-weight:400;
+
+    font-size:2rem;
+
+    letter-spacing:2px;
+
+    color:#f5d742;
+
+    text-align:center;
+
+    margin:10px 0 30px;
+
+    text-shadow:
+        0 0 40px
+        rgba(245,215,66,.15)
+
+}
+
+
+.section{
+
+    padding:35px 28px
+
+}
+
+
+.section h2{
+
+    font-family:'Cinzel',serif;
+
+    font-weight:400;
+
+    font-size:1.35rem;
+
+    color:#f5d742;
+
+    text-align:center;
+
+    margin-bottom:24px
+
+}
+
+
+.field{
+
+    margin-bottom:18px
+
+}
+
+
+.field label{
+
+    display:block;
+
+    color:#d4c5a0;
+
+    font-size:1.05rem;
+
+    margin-bottom:8px
+
+}
+
+
+input{
+
+    width:100%;
+
+    padding:13px 15px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.28);
+
+    border-radius:12px;
+
+    background:
+        rgba(8,7,4,.55);
+
+    color:#f0ece3;
+
+    font-family:inherit;
+
+    font-size:1.05rem;
+
+    text-align:center;
+
+    outline:none
+
+}
+
+
+input:focus{
+
+    border-color:#f5d742
+
+}
+
+
+input::placeholder{
+
+    color:#8e856f
+
+}
+
+
+.gender{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:10px
+
+}
+
+
+.gender input{
+
+    display:none
+
+}
+
+
+.gender label{
+
+    padding:13px;
+
+    text-align:center;
+
+    border:
+        1px solid
+        rgba(212,175,55,.28);
+
+    border-radius:12px;
+
+    background:
+        rgba(8,7,4,.45);
+
+    cursor:pointer
+
+}
+
+
+.gender input:checked+label{
+
+    border-color:#f5d742;
+
+    color:#f5d742
+
+}
+
+
+.female{
+
+    color:#77736a!important;
+
+    border-color:
+        rgba(130,130,130,.18)!important
+
+}
+
+
+.note{
+
+    text-align:center;
+
+    color:#b8ae99;
+
+    font-size:.95rem;
+
+    line-height:1.8;
+
+    margin-bottom:15px
+
+}
+
+
+.date-list{
+
+    display:grid;
+
+    gap:10px
+
+}
+
+
+.date{
+
+    border:
+        1px solid
+        rgba(212,175,55,.2);
+
+    border-radius:13px;
+
+    background:
+        rgba(8,7,4,.45);
+
+    padding:13px;
+
+    cursor:pointer
+
+}
+
+
+.date.selected{
+
+    border-color:
+        rgba(245,215,66,.45)
+
+}
+
+
+.date-head{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    color:#f5d742
+
+}
+
+
+.date-num{
+
+    color:#d4c5a0;
+
+    direction:ltr;
+
+    font-family:inherit
+
+}
+
+
+.activity{
+
+    font-size:.9rem;
+
+    color:#9f957e;
+
+    margin-top:5px
+
+}
+
+
+.sessions{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:8px;
+
+    margin-top:10px
+
+}
+
+
+.session{
+
+    padding:11px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.2);
+
+    border-radius:10px;
+
+    background:
+        rgba(8,7,4,.45);
+
+    color:#f0ece3;
+
+    font-family:inherit;
+
+    cursor:pointer;
+
+    transition:
+        .2s ease
+
+}
+
+
+.session:hover{
+
+    border-color:
+        rgba(245,215,66,.5)
+
+}
+
+
+.session.selected{
+
+    border-color:#f5d742;
+
+    color:#f5d742;
+
+    background:
+        rgba(245,215,66,.07)
+
+}
+
+
+/* سانسی که ظرفیت آن برای تعداد افراد کافی نیست */
+
+.session.low-capacity{
+
+    border-color:
+        rgba(210,85,85,.8);
+
+    color:#e99a9a;
+
+    background:
+        rgba(180,50,50,.08)
+
+}
+
+
+.session.low-capacity.selected{
+
+    border-color:
+        #e99a9a;
+
+    color:#ffb0b0
+
+}
+
+
+.session small{
+
+    display:block;
+
+    margin-top:5px;
+
+    font-size:.82rem;
+
+    color:#b8ae99
+
+}
+
+
+.session.low-capacity small{
+
+    color:#e99a9a
+
+}
+
+
+.session.full{
+
+    border-color:
+        rgba(210,85,85,.75);
+
+    color:#e08b8b
+
+}
+
+
+.session:disabled{
+
+    opacity:.35;
+
+    cursor:not-allowed;
+
+    text-decoration:
+        line-through
+
+}
+
+
+button.main{
+
+    width:100%;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f5d742,
+            #b8962e
+        );
+
+    color:#171208;
+
+    font-family:inherit;
+
+    font-size:1.1rem;
+
+    cursor:pointer
+
+}
+
+
+button.main:disabled{
+
+    opacity:.45;
+
+    cursor:not-allowed
+
+}
+
+
+.message{
+
+    text-align:center;
+
+    min-height:24px;
+
+    margin-top:14px;
+
+    font-size:1rem
+
+}
+
+
+.error{
+
+    color:#d98787
+
+}
+
+
+.success{
+
+    color:#91cfa2
+
+}
+
+
+.info{
+
+    color:#bdb5a4
+
+}
+
+
+#verifySection{
+
+    display:none
+
+}
+
+
+.sent{
+
+    text-align:center;
+
+    color:#d4c5a0;
+
+    line-height:1.8;
+
+    margin-bottom:4px
+
+}
+
+
+.change{
+
+    display:block;
+
+    width:max-content;
+
+    margin:0 auto 20px;
+
+    color:#9f957e;
+
+    font-size:.92rem;
+
+    text-decoration:underline;
+
+    cursor:pointer
+
+}
+
+
+.change:hover{
+
+    color:#f5d742
+
+}
+
+
+.back{
+
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#9f957e;
+
+    text-decoration:none
+
+}
+
+
+.back:hover{
+
+    color:#f5d742
+
+}
+
+
+/* =================================
+   پنجره تأیید نهایی رزرو
+================================= */
+
+.confirm-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:1000;
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    background:
+        rgba(0,0,0,.72);
+
+    backdrop-filter:
+        blur(7px);
+
+    -webkit-backdrop-filter:
+        blur(7px)
+
+}
+
+
+.confirm-modal{
+
+    width:min(100%,460px);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(35,29,17,.98),
+            rgba(12,10,7,.98)
+        );
+
+    border:
+        1px solid
+        rgba(212,175,55,.35);
+
+    border-radius:28px;
+
+    padding:28px 24px 24px;
+
+    box-shadow:
+
+        0 25px 80px
+        rgba(0,0,0,.75),
+
+        0 0 35px
+        rgba(212,175,55,.08)
+
+}
+
+
+.confirm-modal h2{
+
+    font-family:'Cinzel',serif;
+
+    font-weight:400;
+
+    color:#f5d742;
+
+    text-align:center;
+
+    font-size:1.35rem;
+
+    margin-bottom:22px
+
+}
+
+
+.confirm-list{
+
+    display:grid;
+
+    gap:10px;
+
+    margin-bottom:22px
+
+}
+
+
+.confirm-row{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:16px;
+
+    padding:12px 14px;
+
+    border:
+        1px solid
+        rgba(212,175,55,.16);
+
+    border-radius:12px;
+
+    background:
+        rgba(8,7,4,.42)
+
+}
+
+
+.confirm-label{
+
+    color:#9f957e;
+
+    font-size:.9rem;
+
+    white-space:nowrap
+
+}
+
+
+.confirm-value{
+
+    color:#f0ece3;
+
+    font-size:1rem;
+
+    text-align:left;
+
+    line-height:1.6
+
+}
+
+
+.confirm-total{
+
+    color:#f5d742;
+
+    font-weight:600
+
+}
+
+
+.confirm-message{
+
+    min-height:24px;
+
+    text-align:center;
+
+    margin:0 0 12px;
+
+    font-size:.95rem
+
+}
+
+
+.confirm-message.error{
+
+    color:#d98787
+
+}
+
+
+.confirm-message.info{
+
+    color:#bdb5a4
+
+}
+
+
+.confirm-modal .main{
+
+    margin-top:0
+
+}
+
+
+/* =================================
+   موبایل
+================================= */
+
+@media(max-width:640px){
+
+    .section{
+
+        padding:30px 20px;
+
+        border-radius:30px
+
+    }
+
+
+    .title{
+
+        font-size:1.7rem
+
+    }
+
+
+    .sessions{
+
+        grid-template-columns:
+            1fr
+
+    }
+
+
+    .confirm-modal{
+
+        padding:24px 18px;
+
+        border-radius:24px
+
+    }
+
+
+    .confirm-row{
+
+        align-items:flex-start
+
+    }
+
+
+    .confirm-value{
+
+        font-size:.94rem
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1 class="title">
+    رزرو میز
+</h1>
+
+
+<section
+    id="bookingSection"
+    class="section glass"
+>
+
+
+<h2>
+    اطلاعات رزرو
+</h2>
+
+
+<div class="field">
+
+    <label>
+        نام
+    </label>
+
+    <input
+        id="firstName"
+        type="text"
+        placeholder="نام خود را وارد کنید"
+    >
+
+</div>
+
+
+<div class="field">
+
+    <label>
+        نام خانوادگی
+    </label>
+
+    <input
+        id="lastName"
+        type="text"
+        placeholder="نام خانوادگی خود را وارد کنید"
+    >
+
+</div>
+
+
+<div class="field">
+
+    <label for="companions">
+        تعداد همراه
+    </label>
+
+    <input
+        id="companions"
+        type="number"
+        min="0"
+        max="9"
+        value="0"
+        inputmode="numeric"
+        placeholder="تعداد همراه"
+    >
+
+</div>
+
+
+<div class="field">
+
+    <label>
+        جنسیت
+    </label>
+
+
+    <div class="gender">
+
+
+        <div>
+
+            <input
+                id="male"
+                name="gender"
+                type="radio"
+            >
+
+            <label for="male">
+                پسر
+            </label>
+
+        </div>
+
+
+        <div>
+
+            <input
+                id="female"
+                name="gender"
+                type="radio"
+            >
+
+            <label
+                for="female"
+                class="female"
+            >
+                دختر
+            </label>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div
+    id="genderMessage"
+    class="message"
+></div>
+
+
+<div
+    class="field"
+    style="margin-top:28px"
+>
+
+
+<label>
+    تاریخ و سانس
+</label>
+
+
+<div class="note">
+
+    فقط ۷ روز آینده نمایش داده می‌شود.
+
+    هر سانس حداکثر ۱۰ نفر ظرفیت دارد.
+
+    ظرفیت باقی‌مانده هر سانس به‌صورت لحظه‌ای نمایش داده می‌شود.
+
+</div>
+
+
+<div
+    id="dateList"
+    class="date-list"
+></div>
+
+
+</div>
+
+
+<div
+    id="bookingMessage"
+    class="message"
+></div>
+
+
+<div
+    class="field"
+    style="margin-top:28px"
+>
+
+
+<label>
+    شماره تلفن
+</label>
+
+
+<div class="note">
+
+    کد تأیید به این شماره در بله ارسال می‌شود.
+
+</div>
+
+
+<input
+    id="phone"
+    type="tel"
+    inputmode="tel"
+    autocomplete="tel"
+    placeholder="شماره تلفن"
+>
+
+
+</div>
+
+
+<button
+    id="sendButton"
+    class="main"
+>
+
+    ارسال کد تأیید
+
+</button>
+
+
+<div
+    id="sendMessage"
+    class="message"
+></div>
+
+
+<a
+    class="back"
+    href="index.html"
+>
+
+    بازگشت
+
+</a>
+
+
+</section>
+
+
+
+<section
+    id="verifySection"
+    class="section glass"
+>
+
+
+<h2>
+    تأیید شماره تلفن
+</h2>
+
+
+<div
+    id="sentMessage"
+    class="sent"
+></div>
+
+
+<div
+    id="reservationSummary"
+    class="sent"
+></div>
+
+
+<span
+    id="changePhone"
+    class="change"
+>
+
+    تغییر شماره تلفن
+
+</span>
+
+
+<input
+    id="otp"
+    type="text"
+    inputmode="numeric"
+    maxlength="6"
+    autocomplete="one-time-code"
+    placeholder="کد تأیید"
+>
+
+
+<button
+    id="verifyButton"
+    class="main"
+    style="margin-top:12px"
+>
+
+    تأیید شماره تلفن
+
+</button>
+
+
+<div
+    id="verifyMessage"
+    class="message"
+></div>
+
+
+</section>
+
+
+</div>
+
+
+
+<!-- =================================
+     پنجره تأیید نهایی
+================================= -->
+
+<div
+    id="confirmOverlay"
+    class="confirm-overlay"
+>
+
+
+<div
+    class="confirm-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="confirmTitle"
+>
+
+
+<h2 id="confirmTitle">
+    تأیید نهایی رزرو
+</h2>
+
+
+<div class="confirm-list">
+
+
+<div class="confirm-row">
+
+    <span class="confirm-label">
+        نام و نام خانوادگی
+    </span>
+
+    <span
+        id="confirmName"
+        class="confirm-value"
+    ></span>
+
+</div>
+
+
+<div class="confirm-row">
+
+    <span class="confirm-label">
+        تعداد رزرو
+    </span>
+
+    <span
+        id="confirmPeople"
+        class="confirm-value confirm-total"
+    ></span>
+
+</div>
+
+
+<div class="confirm-row">
+
+    <span class="confirm-label">
+        روز و فعالیت
+    </span>
+
+    <span
+        id="confirmActivity"
+        class="confirm-value"
+    ></span>
+
+</div>
+
+
+<div class="confirm-row">
+
+    <span class="confirm-label">
+        ساعت
+    </span>
+
+    <span
+        id="confirmTime"
+        class="confirm-value"
+    ></span>
+
+</div>
+
+
+</div>
+
+
+<div
+    id="confirmMessage"
+    class="confirm-message"
+></div>
+
+
+<button
+    id="confirmReservationButton"
+    class="main"
+>
+
+    ثبت رزرو
+
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+const API_URL =
+    "https://api.pelak8th.ir";
+
+
+let currentPhone =
+    "";
+
+
+let selectedDate =
+    "";
+
+
+let selectedTime =
+    "";
+
+
+let selectedActivity =
+    "";
+
+
+let selectedRemainingCapacity =
+    10;
+
+
+let reservationData = {
+
+    first_name:"",
+    last_name:"",
+    gender:"",
+    companions:0
+
+};
+
+
+let pendingVerificationToken =
+    "";
+
+
+// ========================================
+// تبدیل اعداد فارسی به انگلیسی
+// ========================================
+
+function digits(v){
+
+    return String(v || "")
+
+        .replace(
+            /[۰-۹]/g,
+            d =>
+                "۰۱۲۳۴۵۶۷۸۹"
+                    .indexOf(d)
+        )
+
+        .replace(
+            /[٠-٩]/g,
+            d =>
+                "٠١٢٣٤٥٦٧٨٩"
+                    .indexOf(d)
+        )
+
+        .trim();
+
+}
+
+
+// ========================================
+// پیام
+// ========================================
+
+function msg(
+    id,
+    text,
+    cls=""
+){
+
+    const e =
+        document.getElementById(id);
+
+    e.textContent =
+        text;
+
+    e.className =
+        "message " +
+        cls;
+
+}
+
+
+// ========================================
+// روزهای هفته
+// ========================================
+
+const days = [
+
+    "یکشنبه",
+    "دوشنبه",
+    "سه‌شنبه",
+    "چهارشنبه",
+    "پنجشنبه",
+    "جمعه",
+    "شنبه"
+
+];
+
+
+// ========================================
+// تبدیل میلادی به شمسی
+// ========================================
+
+function jalali(
+    gy,
+    gm,
+    gd
+){
+
+    const g = [
+
+        0,
+        31,
+        59,
+        90,
+        120,
+        151,
+        181,
+        212,
+        243,
+        273,
+        304,
+        334
+
+    ];
+
+
+    let jy =
+        gy > 1600
+            ? 979
+            : 0;
+
+
+    gy -=
+        gy > 1600
+            ? 1600
+            : 621;
+
+
+    let gy2 =
+        gm > 2
+            ? gy + 1
+            : gy;
+
+
+    let d =
+
+        365 * gy +
+
+        Math.floor(
+            (gy2 + 3) / 4
+        ) -
+
+        Math.floor(
+            (gy2 + 99) / 100
+        ) +
+
+        Math.floor(
+            (gy2 + 399) / 400
+        ) -
+
+        80 +
+
+        gd +
+
+        g[gm - 1];
+
+
+    jy +=
+        33 *
+        Math.floor(
+            d / 12053
+        );
+
+
+    d %= 12053;
+
+
+    jy +=
+        4 *
+        Math.floor(
+            d / 1461
+        );
+
+
+    d %= 1461;
+
+
+    if(d > 365){
+
+        jy +=
+            Math.floor(
+                (d - 1) / 365
+            );
+
+        d =
+            (d - 1) % 365;
+
+    }
+
+
+    let jm =
+        d < 186
+            ? 1 +
+                Math.floor(
+                    d / 31
+                )
+            : 7 +
+                Math.floor(
+                    (d - 186) / 30
+                );
+
+
+    let jd =
+        d < 186
+            ? 1 +
+                d % 31
+            : 1 +
+                (d - 186) % 30;
+
+
+    return [
+        jy,
+        jm,
+        jd
+    ];
+
+}
+
+
+// ========================================
+// ساخت تاریخ‌ها
+// ========================================
+
+function buildDates(){
+
+    const box =
+        document.getElementById(
+            "dateList"
+        );
+
+
+    const now =
+        new Date();
+
+
+    box.innerHTML =
+        "";
+
+
+    for(
+        let i = 0;
+        i < 7;
+        i++
+    ){
+
+        let d =
+            new Date(now);
+
+
+        d.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        d.setDate(
+            d.getDate() + i
+        );
+
+
+        let wi =
+            d.getDay();
+
+
+        let j =
+            jalali(
+                d.getFullYear(),
+                d.getMonth() + 1,
+                d.getDate()
+            );
+
+
+        let text =
+
+            `${j[0]}/` +
+            `${String(j[1]).padStart(2,"0")}/` +
+            `${String(j[2]).padStart(2,"0")}`;
+
+
+        let activity =
+
+            [6,0,1,2].includes(wi)
+
+                ? "کتاب"
+
+                : "بازی";
+
+
+        let el =
+            document.createElement(
+                "div"
+            );
+
+
+        el.className =
+            "date";
+
+
+        el.innerHTML = `
+
+            <div class="date-head">
+
+                <span>
+                    ${days[wi]}
+                </span>
+
+                <span class="date-num">
+                    ${text}
+                </span>
+
+            </div>
+
+            <div class="activity">
+                ${activity}
+            </div>
+
+        `;
+
+
+        el.onclick = () =>
+            selectDate(
+                el,
+                text,
+                activity
+            );
+
+
+        box.appendChild(
+            el
+        );
+
+    }
+
+
+    updateSessions();
+
+}
+
+
+// ========================================
+// تبدیل ساعت سانس به دقیقه
+// برای کنترل سانس‌های گذشته
+// ========================================
+
+function timeToMinutes(time){
+
+    let value =
+        String(time || "")
+            .trim();
+
+    // تبدیل اعداد فارسی و عربی به انگلیسی
+    value =
+        value.replace(
+            /[۰-۹]/g,
+            d =>
+                "۰۱۲۳۴۵۶۷۸۹".indexOf(d)
+        );
+
+    value =
+        value.replace(
+            /[٠-٩]/g,
+            d =>
+                "٠١٢٣٤٥٦٧٨٩".indexOf(d)
+        );
+
+
+    // پیدا کردن ساعت شروع
+    const match =
+        value.match(
+            /(\d{1,2})\s*:\s*(\d{2})/
+        );
+
+
+    if(!match)
+        return 0;
+
+
+    return (
+        Number(match[1]) * 60 +
+        Number(match[2])
+    );
+
+}
+
+
+// ========================================
+// دریافت سانس‌ها از Supabase
+// از طریق server.js
+// ========================================
+
+async function getSessions(date){
+
+    try{
+
+        const response =
+            await fetch(
+                `${API_URL}/reservation/sessions?date=${encodeURIComponent(date)}`
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "SESSIONS_NOT_FOUND"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if(
+            !data.success ||
+            !Array.isArray(data.sessions)
+        ){
+
+            throw new Error(
+                "INVALID_SESSIONS"
+            );
+
+        }
+
+
+        return data.sessions;
+
+    }
+    catch(error){
+
+        console.error(
+            "Sessions error:",
+            error
+        );
+
+        return [];
+
+    }
+
+}
+
+// ========================================
+// انتخاب تاریخ
+// ========================================
+
+async function selectDate(
+    el,
+    date,
+    activity
+){
+
+    document
+        .querySelectorAll(".date")
+        .forEach(x => {
+
+            x.classList.remove(
+                "selected"
+            );
+
+
+            const oldSessions =
+                x.querySelector(
+                    ".sessions"
+                );
+
+
+            if(oldSessions)
+                oldSessions.remove();
+
+        });
+
+
+    el.classList.add(
+        "selected"
+    );
+
+
+    selectedDate =
+        date;
+
+
+    selectedTime =
+        "";
+
+
+    selectedActivity =
+        activity;
+
+
+    selectedRemainingCapacity =
+        10;
+
+
+    // ====================================
+    // ساخت بخش سانس‌ها
+    // ====================================
+
+    const sessions =
+        document.createElement(
+            "div"
+        );
+
+
+    sessions.className =
+        "sessions";
+
+
+    sessions.innerHTML = `
+
+        <div
+            style="
+                grid-column:1/-1;
+                text-align:center;
+                color:#b8ae99;
+                padding:10px;
+            "
+        >
+            در حال دریافت سانس‌ها...
+        </div>
+
+    `;
+
+
+    el.appendChild(
+        sessions
+    );
+
+
+    // ====================================
+    // دریافت سانس از سرور
+    // ====================================
+
+    const sessionList =
+        await getSessions(
+            date
+        );
+
+
+    // اگر کاربر در فاصله دریافت
+    // سانس، تاریخ دیگری را انتخاب کرده
+    if(
+        selectedDate !== date
+    ){
+
+        return;
+
+    }
+
+
+    // ====================================
+    // اگر سانسی پیدا نشد
+    // ====================================
+
+    if(
+        sessionList.length === 0
+    ){
+
+        sessions.innerHTML = `
+
+            <div
+                style="
+                    grid-column:1/-1;
+                    text-align:center;
+                    color:#d98787;
+                    padding:10px;
+                "
+            >
+                برای این تاریخ سانسی تعریف نشده است.
+            </div>
+
+        `;
+
+
+        updateSessions();
+
+
+        msg(
+            "bookingMessage",
+
+            "برای این تاریخ سانسی تعریف نشده است.",
+
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    // ====================================
+    // ساخت دکمه‌های سانس
+    // ====================================
+
+    sessions.innerHTML = "";
+
+
+    sessionList.forEach(
+        time => {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "session";
+
+
+            button.dataset.time =
+                time;
+
+
+            button.dataset.start =
+                timeToMinutes(
+                    time
+                );
+
+
+            button.innerHTML = `
+
+                ${time}
+
+                <br>
+
+                <small>
+                    در حال دریافت ظرفیت...
+                </small>
+
+            `;
+
+
+            button.onclick =
+                e => {
+
+                    e.stopPropagation();
+
+
+                    if(
+                        button.disabled
+                    )
+                        return;
+
+
+                    document
+                        .querySelectorAll(
+                            ".session"
+                        )
+                        .forEach(x =>
+                            x.classList.remove(
+                                "selected"
+                            )
+                        );
+
+
+                    button.classList.add(
+                        "selected"
+                    );
+
+
+                    selectedTime =
+                        button.dataset.time;
+
+
+                    selectedRemainingCapacity =
+                        Number(
+                            button.dataset.remaining || 0
+                        );
+
+
+                    msg(
+                        "bookingMessage",
+
+                        `${activity} | ${date} | ${selectedTime}`,
+
+                        "success"
+                    );
+
+                };
+
+
+            sessions.appendChild(
+                button
+            );
+
+        }
+    );
+
+
+    // ====================================
+    // بررسی سانس‌های گذشته
+    // ====================================
+
+    updateSessions();
+
+
+    // ====================================
+    // دریافت ظرفیت هر سانس
+    // ====================================
+
+    loadCapacityForDate(
+        date
+    );
+
+
+    msg(
+        "bookingMessage",
+
+        "روز انتخاب شد؛ لطفاً سانس را انتخاب کنید.",
+
+        "info"
+    );
+
+}
+
+
+// ========================================
+// دریافت ظرفیت یک سانس
+// ========================================
+
+async function getCapacity(
+    date,
+    time
+){
+
+    const url =
+        API_URL +
+        "/reservation/capacity?date=" +
+        encodeURIComponent(date) +
+        "&time=" +
+        encodeURIComponent(time);
+
+
+    const r =
+        await fetch(url);
+
+
+    const d =
+        await r.json();
+
+
+    if(!r.ok){
+
+        throw new Error(
+            d.message ===
+                "DATABASE_ERROR"
+
+                ? "خطا در دریافت ظرفیت."
+
+                : "دریافت ظرفیت ناموفق بود."
+        );
+
+    }
+
+
+    return d;
+
+}
+
+
+// ========================================
+// دریافت ظرفیت هر دو سانس تاریخ
+// ========================================
+
+async function loadCapacityForDate(
+    date
+){
+
+    const sessions =
+        document
+            .querySelectorAll(
+                ".session"
+            );
+
+
+    for(
+        const session of sessions
+    ){
+
+        const time =
+            session.dataset.time;
+
+
+        const small =
+            session.querySelector(
+                "small"
+            );
+
+
+        try{
+
+            const d =
+                await getCapacity(
+                    date,
+                    time
+                );
+
+
+            const remaining =
+                Number(
+                    d.remaining
+                );
+
+
+            session.dataset.remaining =
+                remaining;
+
+
+            small.textContent =
+                "ظرفیت باقی‌مانده: " +
+                remaining +
+                " نفر";
+
+
+            if(
+                remaining === 0
+            ){
+
+                session.classList.add(
+                    "full"
+                );
+
+            }
+            else{
+
+                session.classList.remove(
+                    "full"
+                );
+
+            }
+
+
+            updateSessionCapacityColor(
+                session
+            );
+
+
+        }catch(error){
+
+            session.dataset.remaining =
+                "0";
+
+
+            small.textContent =
+                "ظرفیت نامشخص";
+
+
+            session.classList.remove(
+                "low-capacity"
+            );
+
+        }
+
+    }
+
+
+    updateSessions();
+
+}
+
+
+// ========================================
+// رنگ ظرفیت بر اساس تعداد همراه
+// ========================================
+
+function updateSessionCapacityColor(
+    session
+){
+
+    const companions =
+        Number(
+            document
+                .getElementById(
+                    "companions"
+                )
+                .value || 0
+        );
+
+
+    const requestedPeople =
+        1 +
+        companions;
+
+
+    const remaining =
+        Number(
+            session.dataset.remaining
+        );
+
+
+    session.classList.toggle(
+
+        "low-capacity",
+
+        requestedPeople >
+        remaining
+
+    );
+
+}
+
+
+// ========================================
+// به‌روزرسانی رنگ همه سانس‌ها
+// ========================================
+
+function updateAllCapacityColors(){
+
+    document
+        .querySelectorAll(
+            ".session"
+        )
+        .forEach(
+            updateSessionCapacityColor
+        );
+
+}
+
+
+// ========================================
+// بررسی زمان شروع سانس
+// ========================================
+
+function updateSessions(){
+
+    let now =
+        new Date();
+
+
+    let m =
+        now.getHours() * 60 +
+        now.getMinutes();
+
+
+    document
+        .querySelectorAll(
+            ".date"
+        )
+        .forEach(
+            (d, i) => {
+
+                d
+                    .querySelectorAll(
+                        ".session"
+                    )
+                    .forEach(
+                        s => {
+
+                            let start =
+                                Number(
+                                    s.dataset.start
+                                );
+
+
+                            s.disabled =
+                                i === 0 &&
+                                m >= start;
+
+
+                            /*
+                               فقط زمان گذشته باعث
+                               disabled شدن می‌شود.
+                               ظرفیت کم باعث disabled شدن
+                               نمی‌شود.
+                            */
+
+
+                            updateSessionCapacityColor(
+                                s
+                            );
+
+                        }
+                    );
+
+            }
+        );
+
+}
+
+
+// ========================================
+// تغییر تعداد همراه
+// ========================================
+
+document
+    .getElementById(
+        "companions"
+    )
+    .addEventListener(
+        "input",
+        () => {
+
+            updateAllCapacityColors();
+
+        }
+    );
+
+
+// ========================================
+// جنسیت
+// ========================================
+
+document
+    .getElementById(
+        "female"
+    )
+    .onclick =
+    e => {
+
+        e.preventDefault();
+
+
+        document
+            .getElementById(
+                "male"
+            )
+            .checked =
+            false;
+
+
+        msg(
+            "genderMessage",
+
+            "فعلا از پذیرش خانوم ها معذوریم.",
+
+            "error"
+        );
+
+    };
+
+
+document
+    .getElementById(
+        "male"
+    )
+    .onchange =
+    () => {
+
+        msg(
+            "genderMessage",
+            ""
+        );
+
+    };
+
+
+// ========================================
+// ارسال OTP
+// ========================================
+
+document
+    .getElementById(
+        "sendButton"
+    )
+    .onclick =
+    async () => {
+
+
+        const first =
+            document
+                .getElementById(
+                    "firstName"
+                )
+                .value
+                .trim();
+
+
+        const last =
+            document
+                .getElementById(
+                    "lastName"
+                )
+                .value
+                .trim();
+
+
+        const companions =
+            Number(
+                document
+                    .getElementById(
+                        "companions"
+                    )
+                    .value
+            );
+
+
+        const gender =
+            document.querySelector(
+                'input[name="gender"]:checked'
+            );
+
+
+        const phone =
+            digits(
+                document
+                    .getElementById(
+                        "phone"
+                    )
+                    .value
+            );
+
+
+        if(
+            !first ||
+            !last
+        )
+            return msg(
+
+                "sendMessage",
+
+                "لطفاً نام و نام خانوادگی را وارد کنید.",
+
+                "error"
+
+            );
+
+
+        if(
+            !Number.isInteger(
+                companions
+            ) ||
+            companions < 0 ||
+            companions > 9
+        )
+            return msg(
+
+                "sendMessage",
+
+                "تعداد همراه باید بین ۰ تا ۹ نفر باشد.",
+
+                "error"
+
+            );
+
+
+        if(!gender)
+            return msg(
+
+                "sendMessage",
+
+                "لطفاً جنسیت را انتخاب کنید.",
+
+                "error"
+
+            );
+
+
+        if(
+            !selectedDate ||
+            !selectedTime
+        )
+            return msg(
+
+                "sendMessage",
+
+                "لطفاً تاریخ و سانس را انتخاب کنید.",
+
+                "error"
+
+            );
+
+
+        if(!phone)
+            return msg(
+
+                "sendMessage",
+
+                "لطفاً شماره تلفن را وارد کنید.",
+
+                "error"
+
+            );
+
+
+        // ========================================
+        // آخرین بررسی ظرفیت قبل از ارسال OTP
+        // ========================================
+
+        try{
+
+            const capacity =
+                await getCapacity(
+                    selectedDate,
+                    selectedTime
+                );
+
+
+            const remaining =
+                Number(
+                    capacity.remaining
+                );
+
+
+            const requestedPeople =
+                1 +
+                companions;
+
+
+            if(
+                requestedPeople >
+                remaining
+            ){
+
+                updateAllCapacityColors();
+
+
+                return msg(
+
+                    "sendMessage",
+
+                    "این سانس فقط " +
+                    remaining +
+                    " ظرفیت باقی‌مانده دارد.",
+
+                    "error"
+
+                );
+
+            }
+
+
+        }catch(error){
+
+            return msg(
+
+                "sendMessage",
+
+                "امکان بررسی ظرفیت سانس وجود ندارد. لطفاً دوباره تلاش کنید.",
+
+                "error"
+
+            );
+
+        }
+
+
+        reservationData = {
+
+            first_name:
+                first,
+
+            last_name:
+                last,
+
+            gender:
+                "پسر",
+
+            companions:
+                companions
+
+        };
+
+
+        const b =
+            document.getElementById(
+                "sendButton"
+            );
+
+
+        b.disabled =
+            true;
+
+
+        b.textContent =
+            "در حال ارسال...";
+
+
+        msg(
+
+            "sendMessage",
+
+            "در حال ارسال کد تأیید...",
+
+            "info"
+
+        );
+
+
+        try{
+
+            const r =
+                await fetch(
+
+                    API_URL +
+                    "/otp/send",
+
+                    {
+
+                        method:
+                            "POST",
+
+                        headers:
+                            {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                        body:
+                            JSON.stringify({
+
+                                phone:
+                                    phone
+
+                            })
+
+                    }
+
+                );
+
+
+            const d =
+                await r.json();
+
+
+            if(!r.ok){
+
+                throw new Error(
+
+                    d.message ===
+                        "BALE_ERROR"
+
+                        ? "ارسال پیام از طرف بله با خطا مواجه شد."
+
+                        : "ارسال کد تأیید ناموفق بود."
+
+                );
+
+            }
+
+
+            currentPhone =
+                phone;
+
+
+            document
+                .getElementById(
+                    "bookingSection"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "verifySection"
+                )
+                .style.display =
+                "block";
+
+
+            document
+                .getElementById(
+                    "sentMessage"
+                )
+                .textContent =
+
+                    "کد تأیید به شماره " +
+                    phone +
+                    " ارسال شد.";
+
+
+            document
+                .getElementById(
+                    "reservationSummary"
+                )
+                .textContent =
+
+                    "تعداد همراه: " +
+                    companions +
+                    " نفر | " +
+                    selectedActivity +
+                    " | " +
+                    selectedDate +
+                    " | " +
+                    selectedTime;
+
+
+            document
+                .getElementById(
+                    "otp"
+                )
+                .focus();
+
+
+        }catch(e){
+
+            msg(
+
+                "sendMessage",
+
+                e.message,
+
+                "error"
+
+            );
+
+        }finally{
+
+            b.disabled =
+                false;
+
+
+            b.textContent =
+                "ارسال کد تأیید";
+
+        }
+
+    };
+
+
+// ========================================
+// تغییر شماره تلفن
+// ========================================
+
+document
+    .getElementById(
+        "changePhone"
+    )
+    .onclick =
+    () => {
+
+
+        document
+            .getElementById(
+                "verifySection"
+            )
+            .style.display =
+            "none";
+
+
+        document
+            .getElementById(
+                "bookingSection"
+            )
+            .style.display =
+            "block";
+
+
+        document
+            .getElementById(
+                "otp"
+            )
+            .value =
+            "";
+
+
+        pendingVerificationToken =
+            "";
+
+
+        msg(
+            "verifyMessage",
+            ""
+        );
+
+
+        document
+            .getElementById(
+                "phone"
+            )
+            .focus();
+
+    };
+
+
+// ========================================
+// تأیید OTP
+// ========================================
+
+document
+    .getElementById(
+        "verifyButton"
+    )
+    .onclick =
+    async () => {
+
+
+        const otp =
+            digits(
+                document
+                    .getElementById(
+                        "otp"
+                    )
+                    .value
+            );
+
+
+        if(!otp)
+            return msg(
+
+                "verifyMessage",
+
+                "لطفاً کد تأیید را وارد کنید.",
+
+                "error"
+
+            );
+
+
+        const b =
+            document.getElementById(
+                "verifyButton"
+            );
+
+
+        b.disabled =
+            true;
+
+
+        b.textContent =
+            "در حال بررسی...";
+
+
+        try{
+
+            const r =
+                await fetch(
+
+                    API_URL +
+                    "/otp/verify",
+
+                    {
+
+                        method:
+                            "POST",
+
+                        headers:
+                            {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                        body:
+                            JSON.stringify({
+
+                                phone:
+                                    currentPhone,
+
+                                otp:
+                                    otp
+
+                            })
+
+                    }
+
+                );
+
+
+            const d =
+                await r.json();
+
+
+            if(!r.ok){
+
+                const m = {
+
+                    INVALID_OTP:
+                        "کد واردشده صحیح نیست.",
+
+                    OTP_EXPIRED:
+                        "کد تأیید منقضی شده است.",
+
+                    OTP_NOT_FOUND:
+                        "کدی برای این شماره پیدا نشد.",
+
+                    TOO_MANY_ATTEMPTS:
+                        "تعداد تلاش‌های مجاز تمام شده است."
+
+                };
+
+
+                throw new Error(
+
+                    m[d.message] ||
+                    "بررسی کد ناموفق بود."
+
+                );
+
+            }
+
+
+            if(
+                !d.verificationToken
+            ){
+
+                throw new Error(
+                    "توکن تأیید دریافت نشد."
+                );
+
+            }
+
+
+            pendingVerificationToken =
+                d.verificationToken;
+
+
+            const totalPeople =
+                1 +
+                Number(
+                    reservationData.companions ||
+                    0
+                );
+
+
+            document
+                .getElementById(
+                    "confirmName"
+                )
+                .textContent =
+
+                    reservationData.first_name +
+                    " " +
+                    reservationData.last_name;
+
+
+            document
+                .getElementById(
+                    "confirmPeople"
+                )
+                .textContent =
+
+                    totalPeople +
+                    " نفر (" +
+                    reservationData.companions +
+                    " همراه)";
+
+
+            document
+                .getElementById(
+                    "confirmActivity"
+                )
+                .textContent =
+
+                    selectedDate +
+                    " | " +
+                    selectedActivity;
+
+
+            document
+                .getElementById(
+                    "confirmTime"
+                )
+                .textContent =
+
+                    selectedTime;
+
+
+            document
+                .getElementById(
+                    "confirmMessage"
+                )
+                .textContent =
+                "";
+
+
+            document
+                .getElementById(
+                    "confirmMessage"
+                )
+                .className =
+                "confirm-message";
+
+
+            document
+                .getElementById(
+                    "confirmOverlay"
+                )
+                .style.display =
+                "flex";
+
+
+            msg(
+
+                "verifyMessage",
+
+                "شماره تأیید شد؛ لطفاً اطلاعات رزرو را بررسی کنید.",
+
+                "info"
+
+            );
+
+
+        }catch(e){
+
+            msg(
+
+                "verifyMessage",
+
+                e.message,
+
+                "error"
+
+            );
+
+        }finally{
+
+            if(
+                document
+                    .getElementById(
+                        "confirmOverlay"
+                    )
+                    .style.display !==
+                    "flex"
+            ){
+
+                b.disabled =
+                    false;
+
+
+                b.textContent =
+                    "تأیید شماره تلفن";
+
+            }
+
+        }
+
+    };
+
+
+// ========================================
+// برگشت به انتخاب سانس
+// ========================================
+
+function returnToTimeSelection(
+    message
+){
+
+    document
+        .getElementById(
+            "confirmOverlay"
+        )
+        .style.display =
+        "none";
+
+
+    pendingVerificationToken =
+        "";
+
+
+    document
+        .getElementById(
+            "bookingSection"
+        )
+        .style.display =
+        "block";
+
+
+    document
+        .getElementById(
+            "verifySection"
+        )
+        .style.display =
+        "none";
+
+
+    document
+        .getElementById(
+            "otp"
+        )
+        .value =
+        "";
+
+
+    const verifyButton =
+        document.getElementById(
+            "verifyButton"
+        );
+
+
+    verifyButton.disabled =
+        false;
+
+
+    verifyButton.textContent =
+        "تأیید شماره تلفن";
+
+
+    msg(
+        "verifyMessage",
+        ""
+    );
+
+
+    msg(
+        "sendMessage",
+        message,
+        "error"
+    );
+
+
+    // دوباره ظرفیت سانس‌ها را بگیر
+
+    if(selectedDate){
+
+        loadCapacityForDate(
+            selectedDate
+        );
+
+    }
+
+
+    window.scrollTo({
+        top:
+            document
+                .getElementById(
+                    "bookingSection"
+                )
+                .offsetTop -
+                20,
+
+        behavior:
+            "smooth"
+
+    });
+
+}
+
+
+// ========================================
+// ثبت نهایی رزرو
+// ========================================
+
+document
+    .getElementById(
+        "confirmReservationButton"
+    )
+    .onclick =
+    async () => {
+
+
+        if(
+            !pendingVerificationToken
+        ){
+
+            document
+                .getElementById(
+                    "confirmMessage"
+                )
+                .textContent =
+
+                    "تأیید شماره تلفن منقضی یا نامعتبر شده است.";
+
+            document
+                .getElementById(
+                    "confirmMessage"
+                )
+                .className =
+                "confirm-message error";
+
+
+            return;
+
+        }
+
+
+        const b =
+            document.getElementById(
+                "confirmReservationButton"
+            );
+
+
+        b.disabled =
+            true;
+
+
+        b.textContent =
+            "در حال رزرو...";
+
+
+        document
+            .getElementById(
+                "confirmMessage"
+            )
+            .textContent =
+            "در حال ثبت رزرو...";
+
+
+        document
+            .getElementById(
+                "confirmMessage"
+            )
+            .className =
+            "confirm-message info";
+
+
+        try{
+
+            const rr =
+                await fetch(
+
+                    API_URL +
+                    "/reservation",
+
+                    {
+
+                        method:
+                            "POST",
+
+                        headers:
+                            {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                        body:
+                            JSON.stringify({
+
+                                first_name:
+                                    reservationData.first_name,
+
+                                last_name:
+                                    reservationData.last_name,
+
+                                phone:
+                                    currentPhone,
+
+                                gender:
+                                    reservationData.gender,
+
+                                date:
+                                    selectedDate,
+
+                                time:
+                                    selectedTime,
+
+                                activity:
+                                    selectedActivity,
+
+                                companions:
+                                    reservationData.companions,
+
+                                verificationToken:
+                                    pendingVerificationToken
+
+                            })
+
+                    }
+
+                );
+
+
+            const rd =
+                await rr.json();
+
+
+            if(!rr.ok){
+
+                const rm = {
+
+                    CAPACITY_FULL:
+                        "ظرفیت این سانس تکمیل شده است.",
+
+                    VERIFICATION_REQUIRED:
+                        "تأیید شماره تلفن الزامی است.",
+
+                    INVALID_VERIFICATION:
+                        "تأیید شماره تلفن معتبر نیست.",
+
+                    VERIFICATION_EXPIRED:
+                        "تأیید شماره تلفن منقضی شده است.",
+
+                    DATABASE_ERROR:
+                        "خطا در ذخیره رزرو. لطفاً دوباره تلاش کنید.",
+
+                    RESERVATION_FAILED:
+                        "ثبت رزرو ناموفق بود."
+
+                };
+
+
+                if(
+                    rd.message ===
+                    "CAPACITY_FULL"
+                ){
+
+                    returnToTimeSelection(
+
+                        "ظرفیت این سانس در همین لحظه تکمیل شده است. لطفاً یک سانس دیگر انتخاب کنید."
+
+                    );
+
+
+                    return;
+
+                }
+
+
+                throw new Error(
+
+                    rm[rd.message] ||
+                    "ثبت رزرو ناموفق بود."
+
+                );
+
+            }
+
+
+            // ========================================
+            // ثبت موفق
+            // ========================================
+
+            pendingVerificationToken =
+                "";
+
+
+            document
+                .getElementById(
+                    "confirmOverlay"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "otp"
+                )
+                .disabled =
+                true;
+
+
+            document
+                .getElementById(
+                    "verifyButton"
+                )
+                .style.display =
+                "none";
+
+
+            document
+                .getElementById(
+                    "changePhone"
+                )
+                .style.display =
+                "none";
+
+
+            msg(
+
+                "verifyMessage",
+
+                "رزرو با موفقیت ثبت شد.",
+
+                "success"
+
+            );
+
+
+            document
+                .getElementById(
+                    "reservationSummary"
+                )
+                .textContent =
+
+                    "رزرو شما ثبت شد | " +
+                    selectedActivity +
+                    " | " +
+                    selectedDate +
+                    " | " +
+                    selectedTime +
+                    " | تعداد: " +
+                    (
+                        1 +
+                        Number(
+                            reservationData.companions
+                        )
+                    ) +
+                    " نفر (" +
+                    reservationData.companions +
+                    " همراه)";
+
+
+        }catch(e){
+
+            document
+                .getElementById(
+                    "confirmMessage"
+                )
+                .textContent =
+                e.message;
+
+
+            document
+                .getElementById(
+                    "confirmMessage"
+                )
+                .className =
+                "confirm-message error";
+
+
+            b.disabled =
+                false;
+
+
+            b.textContent =
+                "ثبت رزرو";
+
+        }
+
+    };
+
+
+// ========================================
+// شروع
+// ========================================
+
+buildDates();
+
+
+setInterval(
+
+    updateSessions,
+
+    30000
+
+);
+
+</script>
+
+
+</body>
+
+</html>
