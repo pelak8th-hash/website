@@ -3,7 +3,6 @@
 
 <head>
 
-    
 <meta charset="UTF-8">
 
 <meta
@@ -1321,6 +1320,457 @@ let pendingVerificationToken =
 
 
 // ========================================
+// حفظ موقت وضعیت رزرو در همین تب
+// ========================================
+
+const RESERVATION_STATE_KEY =
+    "pelak8th_reservation_state_v1";
+
+const RESERVATION_STATE_TTL =
+    10 * 60 * 1000;
+
+
+function clearReservationState(){
+
+    try{
+
+        sessionStorage.removeItem(
+            RESERVATION_STATE_KEY
+        );
+
+    }catch(e){
+
+        console.warn(
+            "Could not clear reservation state:",
+            e
+        );
+
+    }
+
+}
+
+
+function getReservationState(){
+
+    try{
+
+        const raw =
+            sessionStorage.getItem(
+                RESERVATION_STATE_KEY
+            );
+
+
+        if(!raw)
+            return null;
+
+
+        const state =
+            JSON.parse(raw);
+
+
+        if(
+            !state ||
+            !state.createdAt ||
+            Date.now() - Number(state.createdAt) >= RESERVATION_STATE_TTL
+        ){
+
+            clearReservationState();
+            return null;
+
+        }
+
+
+        return state;
+
+    }catch(e){
+
+        clearReservationState();
+        return null;
+
+    }
+
+}
+
+
+function saveReservationState(
+    stepOverride = null
+){
+
+    try{
+
+        let state =
+            getReservationState();
+
+
+        if(!state){
+
+            state = {
+                createdAt: Date.now()
+            };
+
+        }
+
+
+        const overlay =
+            document.getElementById(
+                "confirmOverlay"
+            );
+
+
+        let step =
+            stepOverride;
+
+
+        if(!step){
+
+            step =
+                overlay &&
+                overlay.style.display === "flex"
+                    ? "confirm"
+                    : document.getElementById(
+                        "verifySection"
+                    ).style.display === "block"
+                        ? "verify"
+                        : "booking";
+
+        }
+
+
+        state.step = step;
+
+        state.currentPhone = currentPhone;
+        state.selectedDate = selectedDate;
+        state.selectedTime = selectedTime;
+        state.selectedActivity = selectedActivity;
+        state.selectedRemainingCapacity = selectedRemainingCapacity;
+        state.reservationData = reservationData;
+        state.pendingVerificationToken =
+            pendingVerificationToken;
+
+
+        sessionStorage.setItem(
+            RESERVATION_STATE_KEY,
+            JSON.stringify(state)
+        );
+
+    }catch(e){
+
+        console.warn(
+            "Could not save reservation state:",
+            e
+        );
+
+    }
+
+}
+
+
+function resetReservationPage(){
+
+    clearReservationState();
+
+    currentPhone = "";
+    selectedDate = "";
+    selectedTime = "";
+    selectedActivity = "";
+    selectedRemainingCapacity = 10;
+    pendingVerificationToken = "";
+
+    reservationData = {
+        first_name:"",
+        last_name:"",
+        gender:"",
+        companions:0
+    };
+
+    location.reload();
+
+}
+
+
+function checkReservationStateExpiry(){
+
+    try{
+
+        const raw =
+            sessionStorage.getItem(
+                RESERVATION_STATE_KEY
+            );
+
+
+        if(!raw)
+            return;
+
+
+        const state =
+            JSON.parse(raw);
+
+
+        if(
+            !state ||
+            !state.createdAt ||
+            Date.now() - Number(state.createdAt) >= RESERVATION_STATE_TTL
+        ){
+
+            resetReservationPage();
+
+        }
+
+    }catch(e){
+
+        resetReservationPage();
+
+    }
+
+}
+
+
+async function restoreReservationState(){
+
+    const state =
+        getReservationState();
+
+
+    if(!state)
+        return;
+
+
+    currentPhone =
+        state.currentPhone || "";
+
+
+    selectedDate =
+        state.selectedDate || "";
+
+
+    selectedTime =
+        state.selectedTime || "";
+
+
+    selectedActivity =
+        state.selectedActivity || "";
+
+
+    selectedRemainingCapacity =
+        Number(
+            state.selectedRemainingCapacity || 10
+        );
+
+
+    reservationData = {
+        first_name:
+            state.reservationData?.first_name || "",
+        last_name:
+            state.reservationData?.last_name || "",
+        gender:
+            state.reservationData?.gender || "",
+        companions:
+            Number(
+                state.reservationData?.companions || 0
+            )
+    };
+
+
+    pendingVerificationToken =
+        state.pendingVerificationToken || "";
+
+
+    document.getElementById("firstName").value =
+        reservationData.first_name;
+
+
+    document.getElementById("lastName").value =
+        reservationData.last_name;
+
+
+    document.getElementById("companions").value =
+        reservationData.companions;
+
+
+    document.getElementById("phone").value =
+        currentPhone;
+
+
+    if(reservationData.gender === "پسر"){
+
+        document.getElementById("male").checked = true;
+
+    }
+
+
+    if(selectedDate){
+
+        const dateCards =
+            document.querySelectorAll(".date");
+
+
+        let target = null;
+
+
+        dateCards.forEach(card => {
+
+            const dateElement =
+                card.querySelector(".date-num");
+
+
+            if(
+                dateElement &&
+                dateElement.textContent.trim() === selectedDate
+            ){
+
+                target = card;
+
+            }
+
+        });
+
+
+        if(target){
+
+            const activityElement =
+                target.querySelector(".activity");
+
+            const activity =
+                activityElement
+                    ? activityElement.textContent.trim()
+                    : selectedActivity;
+
+
+            await selectDate(
+                target,
+                selectedDate,
+                activity
+            );
+
+
+            if(selectedTime){
+
+                const sessionButton =
+                    Array.from(
+                        target.querySelectorAll(".session")
+                    ).find(
+                        button =>
+                            button.dataset.time === selectedTime
+                    );
+
+
+                if(
+                    sessionButton &&
+                    !sessionButton.disabled
+                ){
+
+                    document
+                        .querySelectorAll(".session")
+                        .forEach(x =>
+                            x.classList.remove("selected")
+                        );
+
+                    sessionButton.classList.add("selected");
+
+                    selectedTime =
+                        sessionButton.dataset.time;
+
+                    selectedRemainingCapacity =
+                        Number(
+                            sessionButton.dataset.remaining ||
+                            selectedRemainingCapacity ||
+                            0
+                        );
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    const step =
+        state.step || "booking";
+
+
+    if(step === "verify" || step === "confirm"){
+
+        document.getElementById(
+            "bookingSection"
+        ).style.display = "none";
+
+        document.getElementById(
+            "verifySection"
+        ).style.display = "block";
+
+
+        document.getElementById(
+            "sentMessage"
+        ).textContent =
+            "کد تأیید به شماره " +
+            currentPhone +
+            " ارسال شده است.";
+
+
+        document.getElementById(
+            "reservationSummary"
+        ).textContent =
+            "تعداد همراه: " +
+            reservationData.companions +
+            " نفر | " +
+            selectedActivity +
+            " | " +
+            selectedDate +
+            " | " +
+            selectedTime;
+
+    }
+
+
+    if(
+        step === "confirm" &&
+        pendingVerificationToken
+    ){
+
+        const totalPeople =
+            1 + Number(reservationData.companions || 0);
+
+
+        document.getElementById("confirmName").textContent =
+            reservationData.first_name +
+            " " +
+            reservationData.last_name;
+
+
+        document.getElementById("confirmPeople").textContent =
+            totalPeople +
+            " نفر (" +
+            reservationData.companions +
+            " همراه)";
+
+
+        document.getElementById("confirmActivity").textContent =
+            selectedDate +
+            " | " +
+            selectedActivity;
+
+
+        document.getElementById("confirmTime").textContent =
+            selectedTime;
+
+
+        document.getElementById("confirmMessage").textContent =
+            "";
+
+        document.getElementById("confirmMessage").className =
+            "confirm-message";
+
+        document.getElementById("confirmOverlay").style.display =
+            "flex";
+
+    }
+
+}
+
+
+// ========================================
 // تبدیل اعداد فارسی به انگلیسی
 // ========================================
 
@@ -1736,25 +2186,7 @@ async function getSessions(date){
             error
         );
 
-        const message =
-            error && error.message
-                ? error.message
-                : String(error);
-
-        const bookingMessage =
-            document.getElementById("bookingMessage");
-
-        if(bookingMessage){
-
-            bookingMessage.textContent =
-                "خطای واقعی: " + message;
-
-            bookingMessage.className =
-                "message error";
-
-        }
-
-        return null;
+        return [];
 
     }
 
@@ -1998,6 +2430,8 @@ async function selectDate(
                         "success"
                     );
 
+                    saveReservationState();
+
                 };
 
 
@@ -2032,6 +2466,8 @@ async function selectDate(
 
         "info"
     );
+
+    saveReservationState();
 
 }
 
@@ -2705,6 +3141,8 @@ document
                 )
                 .focus();
 
+            saveReservationState("verify");
+
 
         }catch(e){
 
@@ -2770,6 +3208,8 @@ document
 
         pendingVerificationToken =
             "";
+
+        saveReservationState("booking");
 
 
         msg(
@@ -2919,6 +3359,8 @@ document
             pendingVerificationToken =
                 d.verificationToken;
 
+            saveReservationState("confirm");
+
 
             const totalPeople =
                 1 +
@@ -3061,6 +3503,8 @@ function returnToTimeSelection(
 
     pendingVerificationToken =
         "";
+
+    saveReservationState("booking");
 
 
     document
@@ -3330,6 +3774,8 @@ document
             pendingVerificationToken =
                 "";
 
+            clearReservationState();
+
 
             document
                 .getElementById(
@@ -3432,7 +3878,96 @@ document
 // شروع
 // ========================================
 
+/*
+    اگر صفحه با Refresh دوباره باز شده باشد،
+    وضعیت همین تب حفظ می‌شود.
+
+    اگر صفحه از مسیر جدید باز شده باشد
+    (مثلاً کلیک روی لینک یا باز کردن دوباره فایل)،
+    وضعیت قبلی پاک می‌شود.
+*/
+
+const navigationEntry =
+    performance.getEntriesByType("navigation")[0];
+
+const navigationType =
+    navigationEntry
+        ? navigationEntry.type
+        : "navigate";
+
+
+if(navigationType === "navigate"){
+
+    clearReservationState();
+
+}
+
+
+if(!getReservationState()){
+
+    try{
+
+        sessionStorage.setItem(
+            RESERVATION_STATE_KEY,
+            JSON.stringify({
+                createdAt: Date.now(),
+                step: "booking",
+                currentPhone: "",
+                selectedDate: "",
+                selectedTime: "",
+                selectedActivity: "",
+                selectedRemainingCapacity: 10,
+                reservationData: {
+                    first_name:"",
+                    last_name:"",
+                    gender:"",
+                    companions:0
+                },
+                pendingVerificationToken: ""
+            })
+        );
+
+    }catch(e){}
+
+}
+
+
 buildDates();
+
+
+// ذخیره تغییرات فرم تا Refresh اطلاعات از بین نرود.
+
+["firstName","lastName","phone"].forEach(id => {
+
+    document
+        .getElementById(id)
+        .addEventListener("input", saveReservationState);
+
+});
+
+
+document
+    .getElementById("companions")
+    .addEventListener("input", saveReservationState);
+
+
+document
+    .getElementById("male")
+    .addEventListener("change", saveReservationState);
+
+
+restoreReservationState();
+
+
+// هر ۳۰ ثانیه زمان انقضای وضعیت را بررسی کن.
+
+setInterval(
+
+    checkReservationStateExpiry,
+
+    30000
+
+);
 
 
 setInterval(
