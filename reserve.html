@@ -16,7 +16,6 @@
 <link rel="icon" type="image/jpeg" href="icon 2.png">
 
 
-    
 <link
     rel="preconnect"
     href="https://fonts.googleapis.com"
@@ -2312,22 +2311,67 @@ async function selectDate(
         // اگر در این فاصله تاریخ دیگری انتخاب شده، پیام قدیمی را نشان نده.
         if(selectedDate !== date) return;
 
+        // ثبت اطلاعات قابل‌ارسال برای تشخیص خطا در مرورگر داخلی ایتا
+        const rawError = error && error.message ? String(error.message) : String(error || "UNKNOWN_ERROR");
+        const errorCode = error && error.name === "AbortError"
+            ? "TIMEOUT_12S"
+            : rawError.startsWith("HTTP_")
+                ? rawError
+                : rawError === "Failed to fetch"
+                    ? "NETWORK_OR_CORS_ERROR"
+                    : rawError;
+        const diagnostic = {
+            time: new Date().toISOString(),
+            errorCode,
+            errorName: error && error.name ? String(error.name) : "Unknown",
+            errorMessage: rawError,
+            date,
+            endpoint: `${API_URL}/reservation/sessions?date=${encodeURIComponent(date)}`,
+            page: location.href,
+            userAgent: navigator.userAgent,
+            online: navigator.onLine
+        };
+        console.error("SESSION_LOAD_DIAGNOSTIC", diagnostic);
+
         sessions.innerHTML = `
             <div style="grid-column:1/-1;text-align:center;color:#d98787;padding:10px;line-height:1.9">
-                دریافت سانس‌ها موقتاً ناموفق بود.<br>
-                اتصال را بررسی کنید یا دوباره تلاش کنید.
-                <button type="button" class="session-retry" style="display:block;margin:10px auto 0;padding:8px 16px;border:1px solid rgba(245,215,66,.5);border-radius:9px;background:rgba(8,7,4,.45);color:#f5d742;font-family:inherit;cursor:pointer">
-                    تلاش دوباره
-                </button>
+                دریافت سانس‌ها ناموفق بود.<br>
+                <div style="direction:ltr;unicode-bidi:plaintext;font-size:12px;color:#f0c66b;margin:7px 0;overflow-wrap:anywhere">کد خطا: ${errorCode.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</div>
+                <div class="session-copy-status" style="font-size:12px;color:#b8ae99"></div>
             </div>
         `;
 
         sessions.querySelector(".session-retry").onclick = () =>
             selectDate(el, date, activity);
 
+        sessions.querySelector(".session-copy-error").onclick = async () => {
+            const textToCopy = JSON.stringify(diagnostic, null, 2);
+            const status = sessions.querySelector(".session-copy-status");
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(textToCopy);
+                } else {
+                    const box = document.createElement("textarea");
+                    box.value = textToCopy;
+                    box.setAttribute("readonly", "");
+                    box.style.position = "fixed";
+                    box.style.opacity = "0";
+                    document.body.appendChild(box);
+                    box.select();
+                    const copied = document.execCommand("copy");
+                    box.remove();
+                    if (!copied) throw new Error("COPY_NOT_SUPPORTED");
+                }
+                status.textContent = "اطلاعات خطا کپی شد؛ آن را برای پشتیبانی بفرستید.";
+            } catch (copyError) {
+                status.textContent = "کپی خودکار ممکن نشد؛ جزئیات در کنسول مرورگر ثبت شده است.";
+                console.error("کپی گزارش خطا ناموفق بود:", copyError, diagnostic);
+            }
+        };
+
         msg(
             "bookingMessage",
-            "ارتباط با سرور برای دریافت سانس‌ها برقرار نشد؛ لطفاً دوباره تلاش کنید.",
+            `دریافت سانس‌ها ناموفق بود (${errorCode}). روی «کپی اطلاعات خطا» بزنید و گزارش را ارسال کنید.`,
             "error"
         );
 
