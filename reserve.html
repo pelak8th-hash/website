@@ -13,6 +13,7 @@
 <title>
     پلاک هشتم | رزرو میز
 </title>
+<link rel="icon" type="image/jpeg" href="icon 2.png">
 
 
 <link
@@ -1057,7 +1058,7 @@ button.main:disabled{
 
 <div class="note">
 
-    کد تأیید به این شماره در پیام‌رسان بله ارسال می‌شود.
+    کد تأیید به این شماره در بله ارسال می‌شود.
 
 </div>
 
@@ -2143,52 +2144,56 @@ function timeToMinutes(time){
 
 async function getSessions(date){
 
-    try{
+    const url =
+        `${API_URL}/reservation/sessions?date=${encodeURIComponent(date)}`;
 
-        const response =
-            await fetch(
-                `${API_URL}/reservation/sessions?date=${encodeURIComponent(date)}`
-            );
+    let lastError = null;
 
+    // خطای موقت شبکه یا بیدار شدن سرور نباید به‌اشتباه
+    // به‌عنوان «برای این تاریخ سانسی تعریف نشده» نمایش داده شود.
+    for(let attempt = 1; attempt <= 3; attempt++){
 
-        if(!response.ok){
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-            throw new Error(
-                "SESSIONS_NOT_FOUND"
-            );
+        try{
 
+            const response = await fetch(url, {
+                method: "GET",
+                cache: "no-store",
+                headers: { "Accept": "application/json" },
+                signal: controller.signal
+            });
+
+            if(!response.ok){
+                throw new Error(`HTTP_${response.status}`);
+            }
+
+            const data = await response.json();
+
+            if(!data || data.success !== true || !Array.isArray(data.sessions)){
+                throw new Error("INVALID_SESSIONS_RESPONSE");
+            }
+
+            return data.sessions;
+
+        }catch(error){
+
+            lastError = error;
+            console.warn(`دریافت سانس‌ها، تلاش ${attempt} از 3 ناموفق بود:`, error);
+
+            if(attempt < 3){
+                await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+            }
+
+        }finally{
+            clearTimeout(timeoutId);
         }
 
-
-        const data =
-            await response.json();
-
-
-        if(
-            !data.success ||
-            !Array.isArray(data.sessions)
-        ){
-
-            throw new Error(
-                "INVALID_SESSIONS"
-            );
-
-        }
-
-
-        return data.sessions;
-
     }
-    catch(error){
 
-        console.error(
-            "Sessions error:",
-            error
-        );
-
-        return [];
-
-    }
+    // خطا را به فراخواننده می‌دهیم تا از خالی بودن واقعی سانس‌ها تفکیک شود.
+    throw lastError || new Error("SESSIONS_REQUEST_FAILED");
 
 }
 
@@ -2201,6 +2206,13 @@ async function selectDate(
     date,
     activity
 ){
+
+    // اگر همان تاریخ دوباره بارگذاری می‌شود (مثلاً تلاش مجدد
+    // یا بازیابی پس از Refresh)، ساعت انتخاب‌شده را نگه دار.
+    const timeToPreserve =
+        selectedDate === date
+            ? selectedTime
+            : "";
 
     document
         .querySelectorAll(".date")
@@ -2233,7 +2245,7 @@ async function selectDate(
 
 
     selectedTime =
-        "";
+        timeToPreserve;
 
 
     selectedActivity =
@@ -2242,6 +2254,9 @@ async function selectDate(
 
     selectedRemainingCapacity =
         10;
+
+    // تاریخ و ساعت انتخاب‌شده را پیش از درخواست شبکه ذخیره کن.
+    saveReservationState();
 
 
     // ====================================
@@ -2283,10 +2298,41 @@ async function selectDate(
     // دریافت سانس از سرور
     // ====================================
 
-    const sessionList =
-        await getSessions(
-            date
+    let sessionList;
+
+    try{
+
+        sessionList = await getSessions(date);
+
+    }catch(error){
+
+        console.error("دریافت سانس‌ها ناموفق بود:", error);
+
+        // اگر در این فاصله تاریخ دیگری انتخاب شده، پیام قدیمی را نشان نده.
+        if(selectedDate !== date) return;
+
+        sessions.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;color:#d98787;padding:10px;line-height:1.9">
+                دریافت سانس‌ها موقتاً ناموفق بود.<br>
+                اتصال را بررسی کنید یا دوباره تلاش کنید.
+                <button type="button" class="session-retry" style="display:block;margin:10px auto 0;padding:8px 16px;border:1px solid rgba(245,215,66,.5);border-radius:9px;background:rgba(8,7,4,.45);color:#f5d742;font-family:inherit;cursor:pointer">
+                    تلاش دوباره
+                </button>
+            </div>
+        `;
+
+        sessions.querySelector(".session-retry").onclick = () =>
+            selectDate(el, date, activity);
+
+        msg(
+            "bookingMessage",
+            "ارتباط با سرور برای دریافت سانس‌ها برقرار نشد؛ لطفاً دوباره تلاش کنید.",
+            "error"
         );
+
+        return;
+
+    }
 
 
     // اگر کاربر در فاصله دریافت
@@ -2441,6 +2487,26 @@ async function selectDate(
 
         }
     );
+
+
+    // اگر ساعت قبلی هنوز در فهرست وجود دارد، انتخابش را بازیابی کن.
+    if(timeToPreserve){
+
+        const previousButton =
+            Array.from(sessions.querySelectorAll(".session"))
+                .find(button => button.dataset.time === timeToPreserve);
+
+        if(previousButton){
+            previousButton.classList.add("selected");
+            selectedTime = timeToPreserve;
+        }else{
+            // اگر این ساعت دیگر در فهرست نیست، انتخاب نامعتبر را پاک کن.
+            selectedTime = "";
+        }
+
+    }
+
+    saveReservationState();
 
 
     // ====================================
