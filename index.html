@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0905">
+    <title>پلاک هشتم | کافه کتاب</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(ellipse at top, #29200d 0%, #100d07 48%, #080704 100%);
+            color: #e6c779;
+            font-family: Tahoma, Arial, sans-serif;
+            text-align: center;
+        }
+
+        #gate {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            padding: 28px 20px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content {
+            width: 100%;
+            max-width: 440px;
+            padding: 42px 24px;
+            border: 1px solid rgba(207, 170, 85, 0.35);
+            border-radius: 22px;
+            background: rgba(15, 12, 7, 0.72);
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .brand {
+            direction: ltr;
+            font-family: Georgia, serif;
+            font-size: clamp(30px, 8vw, 43px);
+            font-weight: bold;
+            letter-spacing: 1px;
+            color: #e7c777;
+            margin-bottom: 24px;
+        }
+
+        .description {
+            color: #c7b994;
+            font-size: 14px;
+            line-height: 2.2;
+            margin-bottom: 30px;
+        }
+
+        .continue-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            border: 1px solid #e5c574;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #e4c477, #b38a3b);
+            color: #171106;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+
+        .continue-btn:active {
+            transform: scale(0.98);
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #807454;
+            font-size: 11px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <main id="gate">
+        <div class="content">
+            <div class="brand">pelak8th.ir</div>
+
+            <div class="description">
+                برای تجربه بهتر و ورود به کافه کتاب پلاک هشتم،
+                ادامه را انتخاب کنید.
+            </div>
+
+            <a
+                class="continue-btn"
+                id="continueBtn"
+                href="https://pelak8th.ir/"
+            >
+                ادامه دادن
+            </a>
+
+            <div class="footer">
+                کافه کتاب پلاک هشتم
+            </div>
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            const ua = navigator.userAgent || "";
+
+            const isEitaa = /eitaa/i.test(ua);
+            const isSoroush = /soroush|splus|soroushplus/i.test(ua);
+            const isMessengerBrowser = isEitaa || isSoroush;
+
+            const gate = document.getElementById("gate");
+            const continueBtn = document.getElementById("continueBtn");
+
+            const chromeIntent =
+                "intent://pelak8th.ir/#Intent;" +
+                "scheme=https;" +
+                "package=com.android.chrome;" +
+                "S.browser_fallback_url=" +
+                encodeURIComponent("https://pelak8th.ir/") +
+                ";end";
+
+            if (isMessengerBrowser) {
+                gate.style.display = "flex";
+
+                continueBtn.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    window.location.href = chromeIntent;
+                });
+            } else {
+                window.location.replace("https://pelak8th.ir/");
+            }
+        })();
+    </script>
+
+</body>
+</html>
