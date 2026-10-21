@@ -1301,6 +1301,11 @@ let selectedTime =
 let selectedActivity =
     "";
 
+// جلوگیری از تداخل درخواست‌های مربوط به تاریخ‌های مختلف
+let dateRequestId = 0;
+let capacityRequestId = 0;
+let activeCapacityControllers = [];
+
 
 let selectedRemainingCapacity =
     10;
@@ -2207,6 +2212,11 @@ async function selectDate(
     activity
 ){
 
+    const thisDateRequest = ++dateRequestId;
+    ++capacityRequestId;
+    activeCapacityControllers.forEach(controller => controller.abort());
+    activeCapacityControllers = [];
+
     // اگر همان تاریخ دوباره بارگذاری می‌شود (مثلاً تلاش مجدد
     // یا بازیابی پس از Refresh)، ساعت انتخاب‌شده را نگه دار.
     const timeToPreserve =
@@ -2303,13 +2313,14 @@ async function selectDate(
     try{
 
         sessionList = await getSessions(date);
+        if(thisDateRequest !== dateRequestId) return;
 
     }catch(error){
 
         console.error("دریافت سانس‌ها ناموفق بود:", error);
 
         // اگر در این فاصله تاریخ دیگری انتخاب شده، پیام قدیمی را نشان نده.
-        if(selectedDate !== date) return;
+        if(thisDateRequest !== dateRequestId || selectedDate !== date) return;
 
         // ثبت اطلاعات قابل‌ارسال برای تشخیص خطا در مرورگر داخلی ایتا
         const rawError = error && error.message ? String(error.message) : String(error || "UNKNOWN_ERROR");
@@ -2337,6 +2348,8 @@ async function selectDate(
             <div style="grid-column:1/-1;text-align:center;color:#d98787;padding:10px;line-height:1.9">
                 دریافت سانس‌ها ناموفق بود.<br>
                 <div style="direction:ltr;unicode-bidi:plaintext;font-size:12px;color:#f0c66b;margin:7px 0;overflow-wrap:anywhere">کد خطا: ${errorCode.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}</div>
+                <button type="button" class="session-retry" style="display:block;margin:10px auto;padding:8px 14px;border:1px solid rgba(212,175,55,.4);border-radius:9px;background:transparent;color:#f5d742;font:inherit;cursor:pointer">تلاش دوباره</button>
+                <button type="button" class="session-copy-error" style="display:block;margin:8px auto;padding:7px 12px;border:1px solid rgba(212,175,55,.25);border-radius:9px;background:transparent;color:#d4c5a0;font:inherit;cursor:pointer">کپی اطلاعات خطا</button>
                 <div class="session-copy-status" style="font-size:12px;color:#b8ae99"></div>
             </div>
         `;
@@ -2508,9 +2521,9 @@ async function selectDate(
 
 
                     selectedRemainingCapacity =
-                        Number(
-                            button.dataset.remaining || 0
-                        );
+                        button.dataset.remaining === "" || button.dataset.remaining === undefined
+                            ? 10
+                            : Number(button.dataset.remaining);
 
 
                     msg(
@@ -2587,144 +2600,60 @@ async function selectDate(
 // دریافت ظرفیت یک سانس
 // ========================================
 
-async function getCapacity(
-    date,
-    time
-){
-
-    const url =
-        API_URL +
-        "/reservation/capacity?date=" +
-        encodeURIComponent(date) +
-        "&time=" +
-        encodeURIComponent(time);
-
-
-    const r =
-        await fetch(url);
-
-
-    const d =
-        await r.json();
-
-
-    if(!r.ok){
-
-        throw new Error(
-            d.message ===
-                "DATABASE_ERROR"
-
-                ? "خطا در دریافت ظرفیت."
-
-                : "دریافت ظرفیت ناموفق بود."
-        );
-
+async function getCapacity(date, time){
+    const url = API_URL + "/reservation/capacity?date=" + encodeURIComponent(date) + "&time=" + encodeURIComponent(time);
+    const controller = new AbortController();
+    activeCapacityControllers.push(controller);
+    const timeoutId = setTimeout(() => controller.abort(), 12000);
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            cache: "no-store",
+            headers: { "Accept": "application/json" },
+            signal: controller.signal
+        });
+        let data;
+        try { data = await response.json(); } catch (_) { data = {}; }
+        if (!response.ok) throw new Error(data.message === "DATABASE_ERROR" ? "خطا در دریافت ظرفیت." : `CAPACITY_HTTP_${response.status}`);
+        if (!data || !Number.isFinite(Number(data.remaining))) throw new Error("INVALID_CAPACITY_RESPONSE");
+        return data;
+    } finally {
+        clearTimeout(timeoutId);
+        activeCapacityControllers = activeCapacityControllers.filter(item => item !== controller);
     }
-
-
-    return d;
-
 }
 
+// دریافت هم‌زمان ظرفیت همهٔ سانس‌ها؛ خرابی یک درخواست، دیگری را متوقف نمی‌کند.
+async function loadCapacityForDate(date){
+    const thisCapacityRequest = ++capacityRequestId;
+    const selectedDateElement = document.querySelector(".date.selected");
+    if (!selectedDateElement) return;
+    const sessions = Array.from(selectedDateElement.querySelectorAll(".session"));
 
-// ========================================
-// دریافت ظرفیت هر دو سانس تاریخ
-// ========================================
-
-async function loadCapacityForDate(
-    date
-){
-
-    const sessions =
-        document
-            .querySelectorAll(
-                ".session"
-            );
-
-
-    for(
-        const session of sessions
-    ){
-
-        const time =
-            session.dataset.time;
-
-
-        const small =
-            session.querySelector(
-                "small"
-            );
-
-
-        try{
-
-            const d =
-                await getCapacity(
-                    date,
-                    time
-                );
-
-
-            const remaining =
-                Number(
-                    d.remaining
-                );
-
-
-            session.dataset.remaining =
-                remaining;
-
-
-            small.textContent =
-                "ظرفیت باقی‌مانده: " +
-                remaining +
-                " نفر";
-
-
-            if(
-                remaining === 0
-            ){
-
-                session.classList.add(
-                    "full"
-                );
-
-            }
-            else{
-
-                session.classList.remove(
-                    "full"
-                );
-
-            }
-
-
-            updateSessionCapacityColor(
-                session
-            );
-
-
-        }catch(error){
-
-            session.dataset.remaining =
-                "0";
-
-
-            small.textContent =
-                "ظرفیت نامشخص";
-
-
-            session.classList.remove(
-                "low-capacity"
-            );
-
+    await Promise.all(sessions.map(async session => {
+        const small = session.querySelector("small");
+        if (!small) return;
+        session.dataset.remaining = "";
+        small.textContent = "در حال دریافت ظرفیت...";
+        session.classList.remove("full", "low-capacity");
+        try {
+            const data = await getCapacity(date, session.dataset.time);
+            if (thisCapacityRequest !== capacityRequestId || selectedDate !== date || !session.isConnected) return;
+            const remaining = Number(data.remaining);
+            session.dataset.remaining = String(remaining);
+            small.textContent = "ظرفیت باقی‌مانده: " + remaining + " نفر";
+            session.classList.toggle("full", remaining === 0);
+            updateSessionCapacityColor(session);
+            if (session.classList.contains("selected")) selectedRemainingCapacity = remaining;
+        } catch (error) {
+            if (thisCapacityRequest !== capacityRequestId || selectedDate !== date || !session.isConnected) return;
+            session.dataset.remaining = "";
+            small.textContent = error && error.name === "AbortError" ? "مهلت پاسخ تمام شد؛ دوباره تلاش کنید" : "ظرفیت نامشخص؛ دوباره تلاش کنید";
+            session.classList.remove("full", "low-capacity");
+            console.warn("دریافت ظرفیت ناموفق بود:", date, session.dataset.time, error);
         }
-
-    }
-
-
-    updateSessions();
-
+    }));
+    if (thisCapacityRequest === capacityRequestId && selectedDate === date) updateSessions();
 }
 
 
@@ -2751,20 +2680,13 @@ function updateSessionCapacityColor(
         companions;
 
 
-    const remaining =
-        Number(
-            session.dataset.remaining
-        );
-
-
-    session.classList.toggle(
-
-        "low-capacity",
-
-        requestedPeople >
-        remaining
-
-    );
+    const rawRemaining = session.dataset.remaining;
+    if (rawRemaining === undefined || rawRemaining === "") {
+        session.classList.remove("low-capacity");
+        return;
+    }
+    const remaining = Number(rawRemaining);
+    session.classList.toggle("low-capacity", requestedPeople > remaining);
 
 }
 
