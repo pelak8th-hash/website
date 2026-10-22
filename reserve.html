@@ -2154,12 +2154,12 @@ async function getSessions(date){
 
     let lastError = null;
 
-    // خطای موقت شبکه یا بیدار شدن سرور نباید به‌اشتباه
-    // به‌عنوان «برای این تاریخ سانسی تعریف نشده» نمایش داده شود.
+    // هنگام بیدار شدن Railway ممکن است پاسخ بیشتر از ۱۲ ثانیه طول بکشد.
+    // هر تلاش مهلت مستقل دارد و خطاهای موقت با فاصله دوباره امتحان می‌شوند.
     for(let attempt = 1; attempt <= 3; attempt++){
 
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000);
+        const timeoutId = setTimeout(() => controller.abort(), 25000);
 
         try{
 
@@ -2188,7 +2188,7 @@ async function getSessions(date){
             console.warn(`دریافت سانس‌ها، تلاش ${attempt} از 3 ناموفق بود:`, error);
 
             if(attempt < 3){
-                await new Promise(resolve => setTimeout(resolve, 700 * attempt));
+                await new Promise(resolve => setTimeout(resolve, 1200 * attempt));
             }
 
         }finally{
@@ -2602,25 +2602,43 @@ async function selectDate(
 
 async function getCapacity(date, time){
     const url = API_URL + "/reservation/capacity?date=" + encodeURIComponent(date) + "&time=" + encodeURIComponent(time);
-    const controller = new AbortController();
-    activeCapacityControllers.push(controller);
-    const timeoutId = setTimeout(() => controller.abort(), 12000);
-    try {
-        const response = await fetch(url, {
-            method: "GET",
-            cache: "no-store",
-            headers: { "Accept": "application/json" },
-            signal: controller.signal
-        });
-        let data;
-        try { data = await response.json(); } catch (_) { data = {}; }
-        if (!response.ok) throw new Error(data.message === "DATABASE_ERROR" ? "خطا در دریافت ظرفیت." : `CAPACITY_HTTP_${response.status}`);
-        if (!data || !Number.isFinite(Number(data.remaining))) throw new Error("INVALID_CAPACITY_RESPONSE");
-        return data;
-    } finally {
-        clearTimeout(timeoutId);
-        activeCapacityControllers = activeCapacityControllers.filter(item => item !== controller);
+    let lastError = null;
+
+    // هر سانس سه بار مستقل امتحان می‌شود تا اختلال موقت شبکه باعث شکست فوری نشود.
+    for(let attempt = 1; attempt <= 3; attempt++){
+        const controller = new AbortController();
+        activeCapacityControllers.push(controller);
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                cache: "no-store",
+                headers: { "Accept": "application/json" },
+                signal: controller.signal
+            });
+            let data;
+            try { data = await response.json(); } catch (_) { data = {}; }
+            if (!response.ok) {
+                const error = new Error(data.message === "DATABASE_ERROR" ? "CAPACITY_DATABASE_ERROR" : `CAPACITY_HTTP_${response.status}`);
+                error.retryable = response.status >= 500 || response.status === 429;
+                throw error;
+            }
+            if (!data || data.success !== true || !Number.isFinite(Number(data.remaining))) {
+                throw new Error("INVALID_CAPACITY_RESPONSE");
+            }
+            return data;
+        } catch(error) {
+            lastError = error;
+            const retryable = error.name === "AbortError" || error.message === "Failed to fetch" || error.retryable || error.message === "CAPACITY_DATABASE_ERROR";
+            console.warn(`دریافت ظرفیت ناموفق بود (تلاش ${attempt} از 3):`, date, time, error);
+            if(attempt >= 3 || !retryable) throw error;
+            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+        } finally {
+            clearTimeout(timeoutId);
+            activeCapacityControllers = activeCapacityControllers.filter(item => item !== controller);
+        }
     }
+    throw lastError || new Error("CAPACITY_REQUEST_FAILED");
 }
 
 // دریافت هم‌زمان ظرفیت همهٔ سانس‌ها؛ خرابی یک درخواست، دیگری را متوقف نمی‌کند.
@@ -2648,7 +2666,7 @@ async function loadCapacityForDate(date){
         } catch (error) {
             if (thisCapacityRequest !== capacityRequestId || selectedDate !== date || !session.isConnected) return;
             session.dataset.remaining = "";
-            small.textContent = error && error.name === "AbortError" ? "مهلت پاسخ تمام شد؛ دوباره تلاش کنید" : "ظرفیت نامشخص؛ دوباره تلاش کنید";
+            small.textContent = error && error.name === "AbortError" ? "پاسخ سرور دیر رسید؛ دوباره تاریخ را انتخاب کنید" : "ظرفیت دریافت نشد؛ دوباره تاریخ را انتخاب کنید";
             session.classList.remove("full", "low-capacity");
             console.warn("دریافت ظرفیت ناموفق بود:", date, session.dataset.time, error);
         }
