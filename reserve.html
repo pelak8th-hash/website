@@ -382,13 +382,24 @@ input::placeholder{
 
     display:grid;
 
-    grid-template-columns:
-        1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
     gap:8px;
 
     margin-top:10px
 
+}
+
+.sessions .session:only-child{
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, 360px);
+}
+
+.sessions .session:nth-child(3):last-child{
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: min(100%, calc(50% - 4px));
 }
 
 
@@ -853,6 +864,10 @@ button.main:disabled{
 
     }
 
+    .sessions .session:nth-child(3):last-child{
+        width:100%;
+    }
+
 
     .confirm-modal{
 
@@ -1023,7 +1038,7 @@ button.main:disabled{
 
     فقط ۷ روز آینده نمایش داده می‌شود.
 
-    هر سانس حداکثر ۱۰ نفر ظرفیت دارد.
+    ظرفیت هر سانس طبق تنظیمات مجموعه محاسبه می‌شود.
 
     ظرفیت باقی‌مانده هر سانس به‌صورت لحظه‌ای نمایش داده می‌شود.
 
@@ -1285,9 +1300,12 @@ button.main:disabled{
 const API_URL =
     "https://api.pelak8th.ir";
 
-// فقط دریافت سانس و ظرفیت از Worker آزمایشی؛ ثبت رزرو و OTP همچنان از Railway استفاده می‌کنند.
-const RESERVATION_READ_API_URL =
-    "https://reservation.pelak8th.workers.dev";
+// تنظیمات سانس، مناسبت‌ها و ظرفیت از API اصلی دریافت می‌شوند تا
+// همهٔ تغییرات جدید از activity_types خوانده شوند.
+const RESERVATION_READ_API_URL = API_URL;
+
+let specialDatesByDate = {};
+let sessionCapacityByDate = {};
 
 
 let currentPhone =
@@ -1807,6 +1825,12 @@ function digits(v){
 }
 
 
+function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[c]));
+}
+
 // ========================================
 // پیام
 // ========================================
@@ -1982,7 +2006,7 @@ function jalali(
 // ساخت تاریخ‌ها
 // ========================================
 
-function buildDates(){
+async function buildDates(){
 
     const box =
         document.getElementById(
@@ -1993,9 +2017,38 @@ function buildDates(){
     const now =
         new Date();
 
+    // ابتدا مناسبت‌های ویژه را دریافت می‌کنیم؛ تاریخ‌ها تا آماده‌شدن تنظیمات نمایش داده نمی‌شوند.
+    box.innerHTML = '<div class="note">در حال دریافت تاریخ‌ها و مناسبت‌ها...</div>';
+    specialDatesByDate = {};
 
-    box.innerHTML =
-        "";
+    const startGregorian = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endGregorian = new Date(startGregorian);
+    endGregorian.setDate(endGregorian.getDate() + 6);
+
+    const startJ = jalali(startGregorian.getFullYear(), startGregorian.getMonth() + 1, startGregorian.getDate());
+    const endJ = jalali(endGregorian.getFullYear(), endGregorian.getMonth() + 1, endGregorian.getDate());
+    const startDateText = `${startJ[0]}/${String(startJ[1]).padStart(2,"0")}/${String(startJ[2]).padStart(2,"0")}`;
+    const endDateText = `${endJ[0]}/${String(endJ[1]).padStart(2,"0")}/${String(endJ[2]).padStart(2,"0")}`;
+
+    try {
+        const response = await fetch(
+            `${RESERVATION_READ_API_URL}/reservation/special-dates?start_date=${encodeURIComponent(startDateText)}&end_date=${encodeURIComponent(endDateText)}`,
+            { cache: "no-store", headers: { "Accept": "application/json" } }
+        );
+        const data = await response.json();
+        if (!response.ok || !data || data.success !== true) {
+            throw new Error(data?.message || `HTTP_${response.status}`);
+        }
+        for (const item of (data.special_dates || [])) {
+            specialDatesByDate[item.date] = item.title;
+        }
+    } catch (error) {
+        console.error("دریافت مناسبت‌های ویژه ناموفق بود:", error);
+        box.innerHTML = '<div class="note" style="color:#d98787">دریافت مناسبت‌ها ناموفق بود؛ صفحه را دوباره بارگذاری کنید.</div>';
+        return;
+    }
+
+    box.innerHTML = "";
 
 
     for(
@@ -2040,13 +2093,11 @@ function buildDates(){
             `${String(j[2]).padStart(2,"0")}`;
 
 
-        let activity =
+        const specialTitle = specialDatesByDate[text] || "";
 
-            [6,0,1,2].includes(wi)
-
-                ? "کتاب"
-
-                : "بازی";
+        let activity = specialTitle || (
+            [6,0,1,2].includes(wi) ? "کتاب" : "بازی"
+        );
 
 
         let el =
@@ -2064,7 +2115,7 @@ function buildDates(){
             <div class="date-head">
 
                 <span>
-                    ${days[wi]}
+                    ${specialTitle ? `🎉 ${days[wi]} 🎉 ${escapeHtml(specialTitle)}` : days[wi]}
                 </span>
 
                 <span class="date-num">
@@ -2184,7 +2235,7 @@ async function getSessions(date){
                 throw new Error("INVALID_SESSIONS_RESPONSE");
             }
 
-            return data.sessions;
+            return data;
 
         }catch(error){
 
@@ -2267,7 +2318,7 @@ async function selectDate(
 
 
     selectedRemainingCapacity =
-        10;
+        sessionCapacityByDate[selectedDate] || 10;
 
     // تاریخ و ساعت انتخاب‌شده را پیش از درخواست شبکه ذخیره کن.
     saveReservationState();
@@ -2316,7 +2367,11 @@ async function selectDate(
 
     try{
 
-        sessionList = await getSessions(date);
+        const sessionsResponse = await getSessions(date);
+        sessionList = sessionsResponse.sessions;
+        sessionCapacityByDate[date] = Number(sessionsResponse.capacity) > 0
+            ? Number(sessionsResponse.capacity)
+            : 10;
         if(thisDateRequest !== dateRequestId) return;
 
     }catch(error){
@@ -2526,7 +2581,7 @@ async function selectDate(
 
                     selectedRemainingCapacity =
                         button.dataset.remaining === "" || button.dataset.remaining === undefined
-                            ? 10
+                            ? (sessionCapacityByDate[date] || 10)
                             : Number(button.dataset.remaining);
 
 
@@ -2730,6 +2785,44 @@ function updateAllCapacityColors(){
 }
 
 
+// تبدیل تاریخ شمسی و دقیقهٔ شروع سانس به زمان محلی مرورگر
+function getJalaliDateTime(jalaliText, minutes) {
+    const match = String(jalaliText || "").match(/^(\d{4})\/(\d{2})\/(\d{2})$/);
+    if (!match || !Number.isFinite(Number(minutes)) || Number(minutes) <= 0) return null;
+    const jy = Number(match[1]), jm = Number(match[2]), jd = Number(match[3]);
+
+    // تبدیل شمسی به میلادی با الگوریتم استاندارد جلالی
+    let y = jy - 979, m = jm - 1, d = jd - 1;
+    let dayNo = 365 * y + Math.floor(y / 33) * 8 + Math.floor(((y % 33) + 3) / 4);
+    const jdm = [31,31,31,31,31,30,30,30,30,30,29];
+    for (let k = 0; k < m; k++) dayNo += jdm[k];
+    dayNo += d;
+    let gDayNo = dayNo + 79;
+    let gy = 1600 + 400 * Math.floor(gDayNo / 146097);
+    gDayNo %= 146097;
+    let leap = true;
+    if (gDayNo >= 36525) {
+        gDayNo--;
+        gy += 100 * Math.floor(gDayNo / 36524);
+        gDayNo %= 36524;
+        if (gDayNo >= 365) gDayNo++;
+        else leap = false;
+    }
+    gy += 4 * Math.floor(gDayNo / 1461);
+    gDayNo %= 1461;
+    if (gDayNo >= 366) {
+        leap = false;
+        gDayNo--;
+        gy += Math.floor(gDayNo / 365);
+        gDayNo %= 365;
+    }
+    const gdMonthDays = [31, (leap ? 29 : 28),31,30,31,30,31,31,30,31,30,31];
+    let gm = 0;
+    while (gm < 11 && gDayNo >= gdMonthDays[gm]) gDayNo -= gdMonthDays[gm++];
+    const gd = gDayNo + 1;
+    return new Date(gy, gm, gd, Math.floor(minutes / 60), minutes % 60, 0, 0);
+}
+
 // ========================================
 // بررسی زمان شروع سانس
 // ========================================
@@ -2765,9 +2858,11 @@ function updateSessions(){
                                 );
 
 
-                            s.disabled =
-                                i === 0 &&
-                                m >= start;
+                            const dateText = d.querySelector(".date-num")?.textContent.trim() || "";
+                            const startDateTime = getJalaliDateTime(dateText, start);
+                            const cutoffPassed = !startDateTime || (startDateTime.getTime() - now.getTime() <= 30 * 60 * 1000);
+
+                            s.disabled = cutoffPassed;
 
 
                             /*
@@ -3770,6 +3865,9 @@ document
 
                 const rm = {
 
+                    RESERVATION_CUTOFF:
+                        "مهلت رزرو این سانس تمام شده است؛ رزرو فقط تا ۳۰ دقیقه قبل از شروع امکان دارد.",
+
                     CAPACITY_FULL:
                         "ظرفیت این سانس تکمیل شده است.",
 
@@ -3983,7 +4081,8 @@ if(!getReservationState()){
 }
 
 
-buildDates();
+// ابتدا تنظیمات تاریخ‌های ویژه بارگذاری می‌شوند؛ سپس وضعیت رزرو بازیابی می‌شود.
+buildDates().then(() => restoreReservationState());
 
 
 // ذخیره تغییرات فرم تا Refresh اطلاعات از بین نرود.
@@ -4005,9 +4104,6 @@ document
 document
     .getElementById("male")
     .addEventListener("change", saveReservationState);
-
-
-restoreReservationState();
 
 
 // هر ۳۰ ثانیه زمان انقضای وضعیت را بررسی کن.
