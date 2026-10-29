@@ -960,12 +960,10 @@ button.main:disabled{
         id="companions"
         type="number"
         min="0"
-        max="9"
         value="0"
         inputmode="numeric"
         placeholder="تعداد همراه"
     >
-
 </div>
 
 
@@ -3023,24 +3021,17 @@ document
             );
 
 
-        if(
-            !Number.isInteger(
-                companions
-            ) ||
-            companions < 0 ||
-            companions > 9
-        )
+        if (
+            !Number.isInteger(companions) ||
+            companions < 0
+        ) {
             return msg(
-
                 "sendMessage",
-
-                "تعداد همراه باید بین ۰ تا ۹ نفر باشد.",
-
+                "تعداد همراه باید یک عدد صحیح و صفر یا بیشتر باشد.",
                 "error"
-
             );
-
-
+        }
+    
         if(!gender)
             return msg(
 
