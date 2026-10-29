@@ -2826,67 +2826,39 @@ function getJalaliDateTime(jalaliText, minutes) {
 // ========================================
 
 
-
 function updateSessions() {
-    const now = new Date();
 
-    const currentMinutes =
-        now.getHours() * 60 + now.getMinutes();
+    let now = new Date();
 
-    const results = [];
+    let m =
+        now.getHours() * 60 +
+        now.getMinutes();
 
-    document.querySelectorAll(".date").forEach((d, i) => {
-        const dateText =
-            d.querySelector(".date-num")?.textContent.trim() || "(تاریخ پیدا نشد)";
+    document
+        .querySelectorAll(".date")
+        .forEach((d, i) => {
 
-        d.querySelectorAll(".session").forEach(s => {
-            const start = Number(s.dataset.start);
+            d
+                .querySelectorAll(".session")
+                .forEach(s => {
 
-            // منطق قدیمی سیستم
-            const expectedDisabled =
-                i === 0 && currentMinutes >= start;
+                    let start =
+                        Number(s.dataset.start);
 
-            // نتیجه را ثبت می‌کنیم
-            results.push({
-                "شماره تاریخ": i,
-                "تاریخ نمایش‌داده‌شده": dateText,
-                "متن سانس": s.textContent.trim(),
-                "data-start خام": s.dataset.start,
-                "شروع به دقیقه": start,
-                "ساعت فعلی مرورگر": now.toLocaleTimeString("fa-IR"),
-                "دقیقه فعلی": currentMinutes,
-                "تاریخ اول است؟": i === 0,
-                "زمان شروع رسیده؟":
-                    Number.isFinite(start) && currentMinutes >= start,
-                "وضعیت مورد انتظار": expectedDisabled
-                    ? "غیرفعال"
-                    : "فعال",
-                "وضعیت واقعی دکمه": s.disabled
-                    ? "غیرفعال"
-                    : "فعال"
-            });
+                    // منطق قدیمی بررسی شروع سانس:
+                    // فقط سانس‌های امروز که زمان شروعشان رسیده
+                    // یا گذشته است، غیرفعال می‌شوند.
+                    s.disabled =
+                        i === 0 &&
+                        m >= start;
 
-            // اجرای منطق اصلی
-            s.disabled = expectedDisabled;
+                    // رنگ ظرفیت بدون تغییر باقی می‌ماند.
+                    updateSessionCapacityColor(s);
 
-            updateSessionCapacityColor(s);
+                });
+
         });
-    });
 
-    console.clear();
-
-    console.log("=== گزارش عیب‌یابی سانس‌ها ===");
-    console.log("زمان فعلی مرورگر:", now.toString());
-    console.log("تاریخ محلی مرورگر:", now.toLocaleDateString("fa-IR"));
-    console.log("دقیقه فعلی:", currentMinutes);
-    console.table(results);
-
-    const target = results.filter(r =>
-        r["متن سانس"].includes("18:30") ||
-        r["متن سانس"].includes("۱۸:۳۰")
-    );
-
-    console.log("=== نتیجه سانس 18:30 ===", target);
 }
 
 
