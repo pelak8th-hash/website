@@ -2825,61 +2825,39 @@ function getJalaliDateTime(jalaliText, minutes) {
 // بررسی زمان شروع سانس
 // ========================================
 
-function updateSessions(){
 
-    let now =
-        new Date();
+function updateSessions() {
 
+    let now = new Date();
 
     let m =
         now.getHours() * 60 +
         now.getMinutes();
 
-
     document
-        .querySelectorAll(
-            ".date"
-        )
-        .forEach(
-            (d, i) => {
+        .querySelectorAll(".date")
+        .forEach((d, i) => {
 
-                d
-                    .querySelectorAll(
-                        ".session"
-                    )
-                    .forEach(
-                        s => {
+            d
+                .querySelectorAll(".session")
+                .forEach(s => {
 
-                            let start =
-                                Number(
-                                    s.dataset.start
-                                );
+                    let start =
+                        Number(s.dataset.start);
 
+                    // منطق قدیمی بررسی شروع سانس:
+                    // فقط سانس‌های امروز که زمان شروعشان رسیده
+                    // یا گذشته است، غیرفعال می‌شوند.
+                    s.disabled =
+                        i === 0 &&
+                        m >= start;
 
-                            const dateText = d.querySelector(".date-num")?.textContent.trim() || "";
-                            const startDateTime = getJalaliDateTime(dateText, start);
-                            const cutoffPassed = !startDateTime || (startDateTime.getTime() - now.getTime() <= 30 * 60 * 1000);
+                    // رنگ ظرفیت بدون تغییر باقی می‌ماند.
+                    updateSessionCapacityColor(s);
 
-                            s.disabled = cutoffPassed;
+                });
 
-
-                            /*
-                               فقط زمان گذشته باعث
-                               disabled شدن می‌شود.
-                               ظرفیت کم باعث disabled شدن
-                               نمی‌شود.
-                            */
-
-
-                            updateSessionCapacityColor(
-                                s
-                            );
-
-                        }
-                    );
-
-            }
-        );
+        });
 
 }
 
