@@ -2930,361 +2930,162 @@ document
     };
 
 
-// ========================================
-// ارسال OTP
-// ========================================
+ // ========================================
+ // ارسال OTP
+ // ========================================
 
-document
-    .getElementById(
-        "sendButton"
-    )
-    .onclick =
-    async () => {
+let otpSendInProgress = false;
 
+document.getElementById("sendButton").onclick = async () => {
 
-        const first =
-            document
-                .getElementById(
-                    "firstName"
-                )
-                .value
-                .trim();
+    // جلوگیری از اجرای هم‌زمان چند درخواست
+    if (otpSendInProgress) return;
 
+    const b = document.getElementById("sendButton");
 
-        const last =
-            document
-                .getElementById(
-                    "lastName"
-                )
-                .value
-                .trim();
-
-
-        const companions =
-            Number(
-                document
-                    .getElementById(
-                        "companions"
-                    )
-                    .value
-            );
-
-
-        const gender =
-            document.querySelector(
-                'input[name="gender"]:checked'
-            );
-
-
-        const phone =
-            digits(
-                document
-                    .getElementById(
-                        "phone"
-                    )
-                    .value
-            );
-
-
-        if(
-            !first ||
-            !last
-        )
-            return msg(
-
-                "sendMessage",
-
-                "لطفاً نام و نام خانوادگی را وارد کنید.",
-
-                "error"
-
-            );
-
-
-        if (
-            !Number.isInteger(companions) ||
-            companions < 0
-        ) {
-            return msg(
-                "sendMessage",
-                "تعداد همراه باید یک عدد صحیح و صفر یا بیشتر باشد.",
-                "error"
-            );
-        }
+    // قفل را قبل از هر بررسی یا درخواست فعال کن
+    otpSendInProgress = true;
+    b.disabled = true;
+    b.textContent = "در حال بررسی...";
     
-        if(!gender)
-            return msg(
+    try {
 
-                "sendMessage",
+        const first = document.getElementById("firstName").value.trim();
+        const last = document.getElementById("lastName").value.trim();
+        const companions = Number(document.getElementById("companions").value);
+        const gender = document.querySelector('input[name="gender"]:checked');
+        const phone = digits(document.getElementById("phone").value);
 
-                "لطفاً جنسیت را انتخاب کنید.",
-
-                "error"
-
-            );
-
-
-        if(
-            !selectedDate ||
-            !selectedTime
-        )
-            return msg(
-
-                "sendMessage",
-
-                "لطفاً تاریخ و سانس را انتخاب کنید.",
-
-                "error"
-
-            );
-
-
-        if(!phone)
-            return msg(
-
-                "sendMessage",
-
-                "لطفاً شماره تلفن را وارد کنید.",
-
-                "error"
-
-            );
-
-
-        // ========================================
-        // آخرین بررسی ظرفیت قبل از ارسال OTP
-        // ========================================
-
-        try{
-
-            const capacity =
-                await getCapacity(
-                    selectedDate,
-                    selectedTime
-                );
-
-
-            const remaining =
-                Number(
-                    capacity.remaining
-                );
-
-
-            const requestedPeople =
-                1 +
-                companions;
-
-
-            if(
-                requestedPeople >
-                remaining
-            ){
-
-                updateAllCapacityColors();
-
-
-                return msg(
-
-                    "sendMessage",
-
-                    "این سانس فقط " +
-                    remaining +
-                    " ظرفیت باقی‌مانده دارد.",
-
-                    "error"
-
-                );
-
-            }
-
-
-        }catch(error){
-
-            return msg(
-
-                "sendMessage",
-
-                "امکان بررسی ظرفیت سانس وجود ندارد. لطفاً دوباره تلاش کنید.",
-
-                "error"
-
-            );
-
+        if (!first || !last) {
+            msg("sendMessage", "لطفاً نام و نام خانوادگی را وارد کنید.", "error");
+            return;
         }
 
+        if (!Number.isInteger(companions) || companions < 0) {
+            msg("sendMessage", "تعداد همراه باید یک عدد صحیح و صفر یا بیشتر باشد.", "error");
+            return;
+        }
 
+        if (!gender) {
+            msg("sendMessage", "لطفاً جنسیت را انتخاب کنید.", "error");
+            return;
+        }
+
+        if (!selectedDate || !selectedTime) {
+            msg("sendMessage", "لطفاً تاریخ و سانس را انتخاب کنید.", "error");
+            return;
+        }
+
+        if (!phone) {
+            msg("sendMessage", "لطفاً شماره تلفن را وارد کنید.", "error");
+            return;
+        }
+
+        b.textContent = "در حال بررسی ظرفیت...";
+
+        // آخرین بررسی ظرفیت پیش از ارسال رمز
+        const capacity = await getCapacity(selectedDate, selectedTime);
+        const remaining = Number(capacity.remaining);
+        const requestedPeople = 1 + companions;
+
+        if (requestedPeople > remaining) {
+            updateAllCapacityColors();
+            msg(
+                "sendMessage",
+                "این سانس فقط " + remaining + " ظرفیت باقی‌مانده دارد.",
+                "error"
+            );
+            return;
+        }
+
+        // اطلاعات رزرو
         reservationData = {
-
-            first_name:
-                first,
-
-            last_name:
-                last,
-
-            gender:
-                "پسر",
-
-            companions:
-                companions
-
+            first_name: first,
+            last_name: last,
+            gender: "پسر",
+            companions: companions
         };
 
+        b.textContent = "در حال ارسال کد...";
 
-        const b =
-            document.getElementById(
-                "sendButton"
-            );
+        msg("sendMessage", "در حال ارسال کد تأیید...", "info");
 
+        const response = await fetch(API_URL + "/otp/send", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                phone: phone
+            })
+        });
 
-        b.disabled =
-            true;
-
-
-        b.textContent =
-            "در حال ارسال...";
-
-
-        msg(
-
-            "sendMessage",
-
-            "در حال ارسال کد تأیید...",
-
-            "info"
-
-        );
-
-
-        try{
-
-            const r =
-                await fetch(
-
-                    API_URL +
-                    "/otp/send",
-
-                    {
-
-                        method:
-                            "POST",
-
-                        headers:
-                            {
-
-                                "Content-Type":
-                                    "application/json"
-
-                            },
-
-                        body:
-                            JSON.stringify({
-
-                                phone:
-                                    phone
-
-                            })
-
-                    }
-
-                );
-
-
-            const d =
-                await r.json();
-
-
-            if(!r.ok){
-
-                throw new Error(
-
-                    d.message ===
-                        "BALE_ERROR"
-
-                        ? "ارسال پیام از طرف بله با خطا مواجه شد."
-
-                        : "ارسال کد تأیید ناموفق بود."
-
-                );
-
-            }
-
-
-            currentPhone =
-                phone;
-
-
-            document
-                .getElementById(
-                    "bookingSection"
-                )
-                .style.display =
-                "none";
-
-
-            document
-                .getElementById(
-                    "verifySection"
-                )
-                .style.display =
-                "block";
-
-            document
-                .getElementById("sentMessage")
-                .innerHTML =
-                    "کد تأیید به شماره " +
-                    phone +
-                    " در <b>پیام‌رسان بله</b> ارسال شد.";
-            
-
-            document
-                .getElementById(
-                    "reservationSummary"
-                )
-                .textContent =
-
-                    "تعداد همراه: " +
-                    companions +
-                    " نفر | " +
-                    selectedActivity +
-                    " | " +
-                    selectedDate +
-                    " | " +
-                    selectedTime;
-
-
-            document
-                .getElementById(
-                    "otp"
-                )
-                .focus();
-
-            saveReservationState("verify");
-
-
-        }catch(e){
-
-            msg(
-
-                "sendMessage",
-
-                e.message,
-
-                "error"
-
-            );
-
-        }finally{
-
-            b.disabled =
-                false;
-
-
-            b.textContent =
-                "ارسال کد تأیید";
-
+        // پاسخ ممکن است JSON معتبر نباشد
+        let data;
+        try {
+            data = await response.json();
+        } catch {
+            throw new Error("پاسخ سرور قابل خواندن نیست. لطفاً دوباره تلاش کنید.");
         }
 
-    };
+        if (!response.ok) {
+            throw new Error(
+                data.message === "BALE_ERROR"
+                    ? "ارسال پیام از طرف بله با خطا مواجه شد."
+                    : data.message === "TOO_MANY_REQUESTS"
+                        ? "تعداد درخواست‌ها زیاد است؛ کمی بعد دوباره تلاش کنید."
+                        : "ارسال کد تأیید ناموفق بود."
+            );
+        }
+
+        // انتقال به مرحله تأیید فقط پس از پاسخ موفق
+        currentPhone = phone;
+
+        document.getElementById("bookingSection").style.display = "none";
+        document.getElementById("verifySection").style.display = "block";
+
+        document.getElementById("sentMessage").innerHTML =
+            "کد تأیید به شماره " +
+            escapeHtml(phone) +
+            " در <b>پیام‌رسان بله</b> ارسال شد.";
+
+        document.getElementById("reservationSummary").textContent =
+            "تعداد همراه: " +
+            companions +
+            " نفر | " +
+            selectedActivity +
+            " | " +
+            selectedDate +
+            " | " +
+            selectedTime;
+
+        document.getElementById("otp").focus();
+
+        saveReservationState("verify");
+
+    } catch (error) {
+
+        console.error("ارسال OTP ناموفق بود:", error);
+
+        msg(
+            "sendMessage",
+            error && error.message
+                ? error.message
+                : "خطای پیش‌بینی‌نشده‌ای رخ داد. لطفاً دوباره تلاش کنید.",
+            "error"
+        );
+
+    } finally {
+
+        // در تمام مسیرها، از جمله خطا و اعتبارسنجی ناموفق،
+        // قفل برداشته و دکمه دوباره فعال می‌شود.
+        otpSendInProgress = false;
+        b.disabled = false;
+        b.textContent = "ارسال کد تأیید";
+
+    }
+
+};
 
 
 // ========================================
