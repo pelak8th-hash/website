@@ -2184,7 +2184,7 @@ function timeToMinutes(time){
 
 
     if(!match)
-        return 0;
+        return NaN;
 
 
     return (
@@ -2850,8 +2850,10 @@ function updateSessions() {
                     // یا گذشته است، غیرفعال می‌شوند.
                     s.disabled =
                         i === 0 &&
+                        Number.isFinite(start) &&
+                        start >= 0 &&
                         m >= start;
-
+    
                     // رنگ ظرفیت بدون تغییر باقی می‌ماند.
                     updateSessionCapacityColor(s);
 
