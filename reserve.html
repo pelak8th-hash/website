@@ -442,13 +442,13 @@ input::placeholder{
 
 }
 
-.sessions .session:only-child{
+.sessions .session:only-of-type{
     grid-column: 1 / -1;
     justify-self: center;
     width: min(100%, 360px);
 }
 
-.sessions .session:nth-child(3):last-child{
+.sessions .session:nth-of-type(3):last-of-type{
     grid-column: 1 / -1;
     justify-self: center;
     width: min(100%, calc(50% - 4px));
@@ -916,7 +916,7 @@ button.main:disabled{
 
     }
 
-    .sessions .session:nth-child(3):last-child{
+    .sessions .session:nth-of-type(3):last-of-type{
         width:100%;
     }
 
@@ -2700,6 +2700,15 @@ async function selectDate(
 
     updateSessions();
 
+    // اگر فقط یک سانس وجود دارد، در صورت قابل انتخاب بودن
+    // همان لحظه به‌صورت خودکار انتخابش کن.
+    if (sessionList.length === 1) {
+        const onlySession = sessions.querySelector(".session");
+
+        if (onlySession && !onlySession.disabled) {
+            onlySession.click();
+        }
+    }
 
     // ====================================
     // دریافت ظرفیت هر سانس
@@ -2709,14 +2718,21 @@ async function selectDate(
         date
     );
 
-
-    msg(
-        "bookingMessage",
-
-        "روز انتخاب شد؛ لطفاً سانس را انتخاب کنید.",
-
-        "info"
-    );
+    if (sessionList.length === 1 && selectedTime) {
+        msg(
+            "bookingMessage",
+            `${activity} | ${date} | ${selectedTime}`,
+            "success"
+        );
+    } else {
+        msg(
+            "bookingMessage",
+            sessionList.length === 1
+                ? "سانس موجود قابل انتخاب نیست؛ لطفاً تاریخ دیگری انتخاب کنید."
+                : "روز انتخاب شد؛ لطفاً سانس را انتخاب کنید.",
+            "info"
+        );
+    }
 
     saveReservationState();
 
