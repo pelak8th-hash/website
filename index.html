@@ -78,8 +78,17 @@
         /* ===== تصویر اصلی ===== */
 
         .hero-brand-image {
+            display: block;
             width: 100%;
             height: auto;
+
+            /* جایگزین موقت تصویر تا زمان بارگذاری؛ هم‌رنگ پس‌زمینه سایت */
+            background: radial-gradient(
+                circle at 50% 20%,
+                #211b0d 0%,
+                #0f0d07 45%,
+                #080704 100%
+            );
 
             -webkit-mask-image: radial-gradient(
                 ellipse at center,
@@ -721,6 +730,8 @@
         <section class="hero-brand" aria-label="کافه کتاب پلاک هشتم">
             <img
                 src="icon.png"
+                width="1536"
+                height="1307"
                 alt="کافه کتاب پلاک هشتم"
                 class="hero-brand-image"
             >
