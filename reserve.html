@@ -332,6 +332,10 @@ input::placeholder{
 
     padding:13px;
 
+    min-height:68px;
+
+    height:auto;
+
     cursor:pointer
 
 }
@@ -347,14 +351,34 @@ input::placeholder{
 
 .date-head{
 
-    display:flex;
+    display:grid;
 
-    justify-content:space-between;
+    grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+
+    align-items:center;
+
+    height:19px;
 
     color:#f5d742
 
 }
 
+.date-day{
+    text-align:right;
+    white-space:nowrap;
+}
+
+.date-special-title{
+    text-align:center;
+    font-size:1.15rem;
+    line-height:19px;
+    font-weight:700;
+    color:#f5d742;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    max-width:100%;
+}
 
 .date-num{
 
@@ -362,7 +386,11 @@ input::placeholder{
 
     direction:ltr;
 
-    font-family:inherit
+    font-family:inherit;
+
+    text-align:left;
+
+    white-space:nowrap
 
 }
 
@@ -373,8 +401,32 @@ input::placeholder{
 
     color:#9f957e;
 
-    margin-top:5px
+    margin-top:5px;
 
+    height:16px;
+
+    line-height:16px;
+
+    white-space:nowrap
+
+}
+
+.activity.special-placeholder{
+    visibility:hidden;
+}
+
+.special-description{
+    grid-column:1/-1;
+    padding:11px 13px;
+    margin-bottom:2px;
+    border:1px solid rgba(212,175,55,.2);
+    border-radius:10px;
+    background:rgba(212,175,55,.055);
+    color:#d4c5a0;
+    text-align:center;
+    line-height:1.9;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
 }
 
 
@@ -2038,7 +2090,10 @@ async function buildDates(){
             throw new Error(data?.message || `HTTP_${response.status}`);
         }
         for (const item of (data.special_dates || [])) {
-            specialDatesByDate[item.date] = item.title;
+            specialDatesByDate[item.date] = {
+                title: item.title || "",
+                description: item.description || ""
+            };
         }
     } catch (error) {
         console.error("دریافت مناسبت‌های ویژه ناموفق بود:", error);
@@ -2091,7 +2146,8 @@ async function buildDates(){
             `${String(j[2]).padStart(2,"0")}`;
 
 
-        const specialTitle = specialDatesByDate[text] || "";
+        const specialInfo = specialDatesByDate[text] || null;
+        const specialTitle = specialInfo?.title || "";
 
         let activity = specialTitle || (
             [6,0,1,2].includes(wi) ? "کتاب" : "بازی"
@@ -2112,8 +2168,12 @@ async function buildDates(){
 
             <div class="date-head">
 
-                <span>
-                    ${specialTitle ? `${days[wi]} ${escapeHtml(specialTitle)}` : days[wi]}
+                <span class="date-day">
+                    ${escapeHtml(days[wi])}
+                </span>
+
+                <span class="date-special-title">
+                    ${specialTitle ? escapeHtml(specialTitle) : ""}
                 </span>
 
                 <span class="date-num">
@@ -2122,8 +2182,8 @@ async function buildDates(){
 
             </div>
 
-            <div class="activity">
-                ${activity}
+            <div class="activity ${specialTitle ? "special-placeholder" : ""}">
+                ${specialTitle ? "&nbsp;" : escapeHtml(activity)}
             </div>
 
         `;
@@ -2335,8 +2395,16 @@ async function selectDate(
     sessions.className =
         "sessions";
 
+    const specialDescription =
+        String(specialDatesByDate[date]?.description || "").trim();
+
+    const descriptionMarkup = specialDescription
+        ? `<div class="special-description">${escapeHtml(specialDescription)}</div>`
+        : "";
 
     sessions.innerHTML = `
+
+        ${descriptionMarkup}
 
         <div
             style="
@@ -2471,6 +2539,8 @@ async function selectDate(
 
         sessions.innerHTML = `
 
+            ${descriptionMarkup}
+
             <div
                 style="
                     grid-column:1/-1;
@@ -2506,7 +2576,7 @@ async function selectDate(
     // ساخت دکمه‌های سانس
     // ====================================
 
-    sessions.innerHTML = "";
+    sessions.innerHTML = descriptionMarkup;
 
 
     sessionList.forEach(
