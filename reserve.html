@@ -1350,10 +1350,9 @@ button.main:disabled{
 const API_URL =
     "https://api.pelak8th.ir";
 
-// تنظیمات سانس، مناسبت‌ها و ظرفیت از API اصلی دریافت می‌شوند تا
-// همهٔ تغییرات جدید از activity_types خوانده شوند.
-const RESERVATION_READ_API_URL = API_URL;
-
+// درخواست‌های خواندنی از طریق Cloudflare Worker
+const RESERVATION_READ_API_URL =
+    "https://آدرس-دقیق-Worker-reservation.workers.dev";
 let specialDatesByDate = {};
 let sessionCapacityByDate = {};
 
