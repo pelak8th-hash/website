@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+	<link rel="preload" as="image" href="icon.png" fetchpriority="high">
+	
     <title>پلاک هشتم | کافه کتاب گیم</title>
     <link rel="icon" type="image/jpeg" href="icon 2.png">
 	
@@ -730,11 +731,13 @@
         <section class="hero-brand" aria-label="کافه کتاب پلاک هشتم">
             <img
                 src="icon.png"
-                width="1536"
+  			    width="1536"
                 height="1307"
                 alt="کافه کتاب پلاک هشتم"
                 class="hero-brand-image"
-            >
+                fetchpriority="high"
+                decoding="async"
+			>
         </section>
 
         <hr class="gold-divider">
@@ -794,6 +797,8 @@
                         class="contact-icon"
                         alt="تصویر ایتا"
                         src="eitaa.png"
+						loading="lazy"
+						decoding="async"
                     >
 
                     <span>
@@ -813,6 +818,8 @@
                         class="contact-icon"
                         alt="تصویر سروش"
                         src="soroush.png"
+						loading="lazy"
+						decoding="async"
                     >
 
                     <span>
@@ -832,6 +839,8 @@
                         class="contact-icon"
                         alt="تصویر اینستاگرام"
                         src="instagram.png"
+						loading="lazy"
+						decoding="async"
                     >
 
                     <span>
