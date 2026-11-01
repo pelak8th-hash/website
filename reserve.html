@@ -1346,12 +1346,13 @@ button.main:disabled{
 
 <script>
 
-const RESERVATION_READ_API_URL =
-    "https://sessions-api.pelak8th.ir";
+const API_URL =
+    "https://api.pelak8th.ir";
 
-// درخواست‌های خواندنی از طریق Cloudflare Worker
+// دریافت اطلاعات از Cloudflare Worker
 const RESERVATION_READ_API_URL =
-    "https://آدرس-دقیق-Worker-reservation.workers.dev";
+    "https://reservation.pelak8th.workers.dev";
+    
 let specialDatesByDate = {};
 let sessionCapacityByDate = {};
 
