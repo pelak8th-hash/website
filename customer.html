@@ -1656,8 +1656,43 @@
            START
         ================================= */
 
-        restoreSession();
+        async function restoreSession() {
 
+            // نمایش فوری صفحه ورود
+            showLogin();
+
+            try {
+
+                const controller = new AbortController();
+        
+                const timeout = setTimeout(
+                    () => controller.abort(),
+                    8000
+                );
+
+                try {
+
+                    const data = await api("/customer/auth/me", {
+                        signal: controller.signal
+                    });
+
+                    if (data.success && data.customer) {
+                        showDashboard(data.customer);
+                    }
+
+                } finally {
+
+                    clearTimeout(timeout);
+        
+                }
+
+            } catch (error) {
+
+                console.log("Session restore:", error);
+
+            }
+
+        }
     </script>
 
 </body>
