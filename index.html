@@ -863,31 +863,33 @@
 
         
     </div>
-	<script>
-		function loadImage(img) {
-			return new Promise(resolve => {
-                if (!img) {
-                    resolve();
-                    return;
-                }
+    <script>
+        function waitForImage(img) {
+            if (!img) return Promise.resolve();
 
-                img.onload = () => resolve();
-                img.onerror = () => resolve();
+            if (img.complete) return Promise.resolve();
 
-                img.src = img.dataset.src;
+            return new Promise(resolve => {
+                img.addEventListener('load', resolve, { once: true });
+                img.addEventListener('error', resolve, { once: true });
             });
+        }
+
+        async function loadImage(img) {
+            if (!img) return;
+
+            if (img.dataset.src) {
+                img.src = img.dataset.src;
+                delete img.dataset.src;
+            }
+
+            await waitForImage(img);
         }
 
         async function loadImagesInOrder() {
             const hero = document.getElementById('mainHeroImage');
 
-            if (hero && !hero.complete) {
-                await new Promise(resolve => {
-                    hero.addEventListener('load', resolve, { once: true });
-                    hero.addEventListener('error', resolve, { once: true });
-                });
-            }
-
+            await waitForImage(hero);
             await loadImage(document.getElementById('eitaaImage'));
             await loadImage(document.getElementById('soroushImage'));
             await loadImage(document.getElementById('instagramImage'));
