@@ -798,7 +798,7 @@
                     <img
                         class="contact-icon"
                         alt="تصویر ایتا"
-                        src="eitaa.png"
+                        data-src="eitaa.png"
                         decoding="async"
                         id="eitaaImage"
                     >
@@ -819,7 +819,7 @@
                     <img
                         class="contact-icon"
                         alt="تصویر سروش"
-                        src="soroush.png"
+                        data-src="soroush.png"
                         decoding="async"
                         id="soroushImage"
                     >
@@ -840,7 +840,7 @@
                     <img
                          class="contact-icon"
                          alt="تصویر اینستاگرام"
-                         src="instagram.png"
+                         data-src="instagram.png"
                          decoding="async"
                          id="instagramImage"
                     >
@@ -863,6 +863,38 @@
 
         
     </div>
+	<script>
+		function loadImage(img) {
+			return new Promise(resolve => {
+                if (!img) {
+                    resolve();
+                    return;
+                }
+
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+
+                img.src = img.dataset.src;
+            });
+        }
+
+        async function loadImagesInOrder() {
+            const hero = document.getElementById('mainHeroImage');
+
+            if (hero && !hero.complete) {
+                await new Promise(resolve => {
+                    hero.addEventListener('load', resolve, { once: true });
+                    hero.addEventListener('error', resolve, { once: true });
+                });
+            }
+
+            await loadImage(document.getElementById('eitaaImage'));
+            await loadImage(document.getElementById('soroushImage'));
+            await loadImage(document.getElementById('instagramImage'));
+        }
+
+        loadImagesInOrder();
+    </script>
 	<script>
 	    const menuButton = document.getElementById('menuButton');
 	    const sideMenu = document.getElementById('sideMenu');
