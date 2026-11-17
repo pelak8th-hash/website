@@ -1708,10 +1708,13 @@ async function restoreReservationState(){
                 target.querySelector(".activity");
 
             const activity =
-                activityElement
-                    ? activityElement.textContent.trim()
-                    : selectedActivity;
-
+                specialDatesByDate[selectedDate]?.title ||
+                (
+                    activityElement
+                        ? activityElement.textContent.trim()
+                        : ""
+                ) ||
+                selectedActivity;
 
             await selectDate(
                 target,
@@ -2449,7 +2452,7 @@ async function selectDate(
         // ثبت اطلاعات قابل‌ارسال برای تشخیص خطا در مرورگر داخلی ایتا
         const rawError = error && error.message ? String(error.message) : String(error || "UNKNOWN_ERROR");
         const errorCode = error && error.name === "AbortError"
-            ? "TIMEOUT_12S"
+            ? "TIMEOUT_25S"
             : rawError.startsWith("HTTP_")
                 ? rawError
                 : rawError === "Failed to fetch"
@@ -2769,12 +2772,36 @@ async function getCapacity(date, time){
                 throw new Error("INVALID_CAPACITY_RESPONSE");
             }
             return data;
-        } catch(error) {
+        }catch(error) {
+
             lastError = error;
-            const retryable = error.name === "AbortError" || error.message === "Failed to fetch" || error.retryable || error.message === "CAPACITY_DATABASE_ERROR";
-            console.warn(`دریافت ظرفیت ناموفق بود (تلاش ${attempt} از 3):`, date, time, error);
-            if(attempt >= 3 || !retryable) throw error;
-            await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+
+            // درخواست لغوشده نباید دوباره اجرا شود.
+            if(controller.signal.aborted){
+                throw error;
+            }
+
+            const retryable =
+                error.name === "AbortError" ||
+                error.message === "Failed to fetch" ||
+                error.retryable ||
+                error.message === "CAPACITY_DATABASE_ERROR";
+
+            console.warn(
+                `دریافت ظرفیت ناموفق بود (تلاش ${attempt} از 3):`,
+                date,
+                time,
+                error
+            );
+
+            if(attempt >= 3 || !retryable){
+                throw error;
+            }
+
+            await new Promise(
+        resolve => setTimeout(resolve, 1000 * attempt)
+            );
+
         } finally {
             clearTimeout(timeoutId);
             activeCapacityControllers = activeCapacityControllers.filter(item => item !== controller);
