@@ -609,6 +609,7 @@
 
         .enamad-wrapper {
             display: flex;
+            direction: ltr;
             align-items: center;
             justify-content: flex-end;
             margin-top: 18px;
@@ -1166,6 +1167,28 @@
         }
 
 
+        const messageTimeouts = new WeakMap();
+
+        function showRateLimitMessage(element, seconds) {
+
+            const message = formatRetryMessage(seconds);
+            showMessage(element, message, "error");
+
+            const previousTimeout = messageTimeouts.get(element);
+            if (previousTimeout) {
+                clearTimeout(previousTimeout);
+            }
+
+            const timeout = setTimeout(() => {
+                clearMessage(element);
+                messageTimeouts.delete(element);
+            }, 5000);
+
+            messageTimeouts.set(element, timeout);
+
+        }
+
+
         /* =================================
            API REQUEST
         ================================= */
@@ -1207,6 +1230,29 @@
                 );
 
                 error.status = response.status;
+
+                // Support rate-limit retry information from the server.
+                // Accepted formats: Retry-After header or JSON retry_after_seconds.
+                let retryAfter = response.headers.get("Retry-After");
+                let retrySeconds = Number(
+                    data.retry_after_seconds ?? data.retryAfterSeconds ??
+                    data.retry_after ?? data.cooldown_seconds
+                );
+
+                if (!Number.isFinite(retrySeconds) || retrySeconds <= 0) {
+                    retrySeconds = Number(retryAfter);
+                }
+
+                if ((!Number.isFinite(retrySeconds) || retrySeconds <= 0) && retryAfter) {
+                    const retryDate = Date.parse(retryAfter);
+                    if (Number.isFinite(retryDate)) {
+                        retrySeconds = Math.ceil((retryDate - Date.now()) / 1000);
+                    }
+                }
+
+                if (Number.isFinite(retrySeconds) && retrySeconds > 0) {
+                    error.retryAfterSeconds = Math.ceil(retrySeconds);
+                }
 
                 throw error;
 
@@ -1354,6 +1400,25 @@
         }
 
 
+        function formatRetryMessage(seconds) {
+
+            const total = Math.max(1, Math.ceil(Number(seconds) || 0));
+            const minutes = Math.floor(total / 60);
+            const remainingSeconds = total % 60;
+
+            if (minutes > 0 && remainingSeconds > 0) {
+                return `به دلیل محدودیت ارسال، لطفاً ${minutes} دقیقه و ${remainingSeconds} ثانیه بعد دوباره تلاش کنید.`;
+            }
+
+            if (minutes > 0) {
+                return `به دلیل محدودیت ارسال، لطفاً ${minutes} دقیقه بعد دوباره تلاش کنید.`;
+            }
+
+            return `به دلیل محدودیت ارسال، لطفاً ${total} ثانیه بعد دوباره تلاش کنید.`;
+
+        }
+
+
         /* =================================
            REQUEST OTP
         ================================= */
@@ -1421,11 +1486,15 @@
 
             } catch (error) {
 
-                showMessage(
-                    phoneMessage,
-                    error.message || "ارسال کد انجام نشد. کمی بعد دوباره تلاش کنید.",
-                    "error"
-                );
+                if (error.message === "OTP_RATE_LIMIT" && error.retryAfterSeconds) {
+                    showRateLimitMessage(phoneMessage, error.retryAfterSeconds);
+                } else {
+                    showMessage(
+                        phoneMessage,
+                        error.message || "ارسال کد انجام نشد. کمی بعد دوباره تلاش کنید.",
+                        "error"
+                    );
+                }
 
             } finally {
 
@@ -1588,11 +1657,15 @@
 
             } catch (error) {
 
-                showMessage(
-                    otpMessage,
-                    error.message || "ارسال مجدد کد ممکن نشد.",
-                    "error"
-                );
+                if (error.message === "OTP_RATE_LIMIT" && error.retryAfterSeconds) {
+                    showRateLimitMessage(otpMessage, error.retryAfterSeconds);
+                } else {
+                    showMessage(
+                        otpMessage,
+                        error.message || "ارسال مجدد کد ممکن نشد.",
+                        "error"
+                    );
+                }
 
                 resendButton.disabled = false;
 
