@@ -111,6 +111,11 @@
             filter: drop-shadow(0 0 12px rgba(245,215,66,.12));
         }
 
+        .brand > div {
+            direction: rtl;
+            text-align: right;
+        }
+
         .brand small {
             display: block;
             margin-top: 3px;
@@ -120,6 +125,7 @@
             font-weight: 400;
             letter-spacing: 1.5px;
             direction: ltr;
+            text-align: right;
         }
 
         .home-link {
@@ -559,6 +565,126 @@
             cursor: wait;
         }
 
+
+        /* ==============================
+           CONTACT & ENAMAD
+        ============================== */
+
+        .contact-section {
+            margin-top: 38px;
+            padding: 24px 0 10px;
+            text-align: center;
+        }
+
+        .contact-title {
+            margin: 0 0 22px;
+            color: var(--gold);
+            font-size: 1.35rem;
+            font-weight: 500;
+            text-shadow: 0 0 22px rgba(245,215,66,.14);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-card {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-width: 0;
+            min-height: 76px;
+            padding: 12px;
+            color: var(--text);
+            text-decoration: none;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            transition: transform .2s ease, border-color .2s ease, background .2s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(245,215,66,.55);
+            background: rgba(30,26,17,.65);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            flex: 0 0 40px;
+            object-fit: cover;
+            border-radius: 11px;
+        }
+
+        .contact-card span {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .contact-card b {
+            color: var(--gold);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .contact-card small {
+            color: var(--muted);
+            font-size: 12px;
+            direction: ltr;
+        }
+
+        .enamad-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+        }
+
+        .enamad-wrapper a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .enamad-wrapper img {
+            display: block;
+            width: auto;
+            max-width: 100%;
+            max-height: 105px;
+            object-fit: contain;
+        }
+
+        @media (max-width: 700px) {
+            .contact-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 420px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+            .contact-card {
+                justify-content: flex-start;
+            }
+            .enamad-wrapper {
+                justify-content: center;
+            }
+        }
+
         /* ==============================
            FOOTER
         ============================== */
@@ -747,10 +873,6 @@
 
             <div id="otpStep" hidden>
 
-                <div class="section-kicker">
-                    VERIFY YOUR NUMBER
-                </div>
-
                 <h2 class="card-title">
                     تأیید شماره موبایل
                 </h2>
@@ -849,17 +971,13 @@
 
             <div class="glass dashboard-head">
 
-                <div class="welcome-kicker">
-                    WELCOME TO PELAK HASHTOM
-                </div>
-
                 <h1 class="welcome-title">
                     خوش آمدید،
                     <span id="customerName">مشتری گرامی</span>
                 </h1>
 
                 <p class="welcome-description">
-                    به فضای اختصاصی خودتان در کافه کتاب پلاک هشتم خوش آمدید.
+                    فضای اختصاصی کاربران در کافه کتاب پلاک هشتم.
                 </p>
 
             </div>
@@ -917,6 +1035,35 @@
                 ></div>
 
             </section>
+
+        <!-- CONTACT & ENAMAD -->
+        <section id="contact" class="contact-section" aria-labelledby="contactTitle">
+            <h2 class="contact-title" id="contactTitle">راه‌های ارتباطی</h2>
+
+            <div class="contact-grid">
+                <a class="contact-card" href="https://eitaa.com/pelak8th" target="_blank" rel="noopener noreferrer">
+                    <img class="contact-icon" src="https://raw.githubusercontent.com/pelak8th-hash/pelak8th-assets/main/eitaa.webp" alt="ایتا" loading="lazy" decoding="async">
+                    <span><b>ایتا</b><small>@pelak8th</small></span>
+                </a>
+
+                <a class="contact-card" href="https://splus.ir/pelak8th" target="_blank" rel="noopener noreferrer">
+                    <img class="contact-icon" src="https://raw.githubusercontent.com/pelak8th-hash/pelak8th-assets/main/soroush.webp" alt="سروش" loading="lazy" decoding="async">
+                    <span><b>سروش</b><small>@pelak8th</small></span>
+                </a>
+
+                <a class="contact-card" href="https://www.instagram.com/pelak.8th/" target="_blank" rel="noopener noreferrer">
+                    <img class="contact-icon" src="https://raw.githubusercontent.com/pelak8th-hash/pelak8th-assets/main/instagram.webp" alt="اینستاگرام" loading="lazy" decoding="async">
+                    <span><b>اینستاگرام</b><small>@pelak.8th</small></span>
+                </a>
+
+            </div>
+
+            <div class="enamad-wrapper">
+                    <a referrerpolicy="origin" target="_blank" rel="noopener noreferrer" href="https://trustseal.enamad.ir/?id=7903332&amp;Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft">
+                        <img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=7903332&amp;Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft" alt="نماد اعتماد الکترونیکی کافه کتاب پلاک هشتم" loading="lazy" decoding="async">
+                    </a>
+            </div>
+        </section>
 
         </section>
 
