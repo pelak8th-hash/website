@@ -533,40 +533,6 @@
         }
 
         /* ==============================
-           LOGOUT
-        ============================== */
-
-        .dashboard-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 18px;
-        }
-
-        .logout-button {
-            padding: 9px 17px;
-
-            color: #e8d8ad;
-            background: rgba(0,0,0,.15);
-
-            border: 1px solid var(--line);
-            border-radius: 999px;
-
-            font-size: 12px;
-            transition: .2s;
-        }
-
-        .logout-button:hover {
-            color: var(--gold);
-            border-color: var(--gold);
-        }
-
-        .logout-button:disabled {
-            opacity: .5;
-            cursor: wait;
-        }
-
-
-        /* ==============================
            CONTACT & ENAMAD
         ============================== */
 
@@ -644,7 +610,7 @@
         .enamad-wrapper {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-end;
             margin-top: 18px;
             padding: 0;
             background: transparent;
@@ -653,10 +619,10 @@
         }
 
         .enamad-wrapper a {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            width: 100%;
+            justify-content: flex-end;
+            width: auto;
         }
 
         .enamad-wrapper img {
@@ -679,9 +645,6 @@
             }
             .contact-card {
                 justify-content: flex-start;
-            }
-            .enamad-wrapper {
-                justify-content: center;
             }
         }
 
@@ -1015,25 +978,6 @@
                 </div>
 
 
-                <div class="dashboard-actions">
-
-                    <button
-                        class="logout-button"
-                        id="logoutButton"
-                        type="button"
-                    >
-                        خروج از حساب
-                    </button>
-
-                </div>
-
-                <div
-                    id="logoutMessage"
-                    class="message"
-                    role="status"
-                    aria-live="polite"
-                ></div>
-
             </section>
 
         <!-- CONTACT & ENAMAD -->
@@ -1125,15 +1069,11 @@
 
         const otpMessage = document.getElementById("otpMessage");
 
-        const logoutMessage = document.getElementById("logoutMessage");
-
         const countdown = document.getElementById("countdown");
 
         const phonePreview = document.getElementById("phonePreview");
 
         const customerName = document.getElementById("customerName");
-
-        const logoutButton = document.getElementById("logoutButton");
 
 
         /* =================================
@@ -1302,8 +1242,6 @@
 
             customerName.textContent =
                 (first + " " + last).trim() || "مشتری گرامی";
-
-            clearMessage(logoutMessage);
 
         }
 
@@ -1718,55 +1656,26 @@
 
 
         /* =================================
-           LOGOUT
+           HOME / LOGOUT
         ================================= */
 
-        logoutButton.addEventListener("click", async () => {
+        const homeLink = document.querySelector(".home-link");
 
-            logoutButton.disabled = true;
+        homeLink.addEventListener("click", (event) => {
 
-            logoutButton.textContent = "در حال خروج...";
+            // اگر کاربر وارد پنل شده باشد، درخواست خروج را در پس‌زمینه می‌فرستیم
+            // تا بازگشت به خانه منتظر پاسخ API نماند.
+            if (dashboardView.style.display === "block") {
 
-            clearMessage(logoutMessage);
+                event.preventDefault();
 
+                fetch(API_BASE + "/customer/auth/logout", {
+                    method: "POST",
+                    credentials: "include",
+                    keepalive: true
+                }).catch(() => {});
 
-            try {
-
-                await api("/customer/auth/logout", {
-                    method: "POST"
-                });
-
-
-                stopTimers();
-
-                challengeId = null;
-
-                currentPhone = "";
-
-                phoneInput.value = "";
-
-                otpInput.value = "";
-
-                clearMessage(phoneMessage);
-
-                clearMessage(otpMessage);
-
-                showLogin();
-
-
-            } catch (error) {
-
-                showMessage(
-                    logoutMessage,
-                    error.message || "خروج از حساب انجام نشد. لطفاً دوباره تلاش کنید.",
-                    "error"
-                );
-
-            } finally {
-
-                logoutButton.disabled = false;
-
-                logoutButton.textContent = "خروج از حساب";
+                window.location.assign("index.html");
 
             }
 
