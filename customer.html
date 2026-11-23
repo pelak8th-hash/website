@@ -832,7 +832,7 @@
 
             </div>
 
-            <a class="home-link" href="index.html">
+            <a class="home-link" href="https://pelak8th.ir/">
                 بازگشت به خانه
             </a>
 
@@ -1081,9 +1081,7 @@
                 </a>
 
                 <div class="enamad-wrapper">
-                    <a referrerpolicy="origin" target="_blank" rel="noopener noreferrer" href="https://trustseal.enamad.ir/?id=7903332&amp;Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft">
-                        <img referrerpolicy="origin" src="https://trustseal.enamad.ir/logo.aspx?id=7903332&amp;Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft" alt="نماد اعتماد الکترونیکی کافه کتاب پلاک هشتم" loading="lazy" decoding="async">
-                    </a>
+                    <a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=7903332&Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=7903332&Code=ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft' alt='' style='cursor:pointer' code='ewKGznlYtk7yHKWZo3OF7LDWHDxk1Rft'></a>
                 </div>
             </div>
         </section>
@@ -1813,23 +1811,19 @@
         const homeLink = document.querySelector(".home-link");
 
         homeLink.addEventListener("click", (event) => {
+            event.preventDefault();
 
-            // اگر کاربر وارد پنل شده باشد، درخواست خروج را در پس‌زمینه می‌فرستیم
-            // تا بازگشت به خانه منتظر پاسخ API نماند.
+            // خروج را بدون منتظر ماندن برای پاسخ سرور در پس‌زمینه می‌فرستیم.
             if (dashboardView.style.display === "block") {
-
-                event.preventDefault();
-
                 fetch(API_BASE + "/customer/auth/logout", {
                     method: "POST",
                     credentials: "include",
                     keepalive: true
                 }).catch(() => {});
-
-                window.location.assign("index.html");
-
             }
 
+            // همیشه مستقیم به دامنه اصلی برو؛ منتظر logout یا مسیر نسبی نمی‌مانیم.
+            window.location.replace("https://pelak8th.ir/");
         });
 
 
